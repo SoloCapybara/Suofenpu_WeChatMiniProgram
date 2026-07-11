@@ -1,0 +1,7 @@
+# Local tooling and private project settings
+.DS_Store
+project.private.config.json
+
+# The admin console and backend are maintained in separate repositories.
+/admin-web/
+/backend/

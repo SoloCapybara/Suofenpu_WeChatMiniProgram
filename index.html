@@ -1,0 +1,1210 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>嗦粉铺 - 订餐原型</title>
+    <style>
+      :root {
+        --bg: #f6f7f4;
+        --panel: #ffffff;
+        --text: #202124;
+        --muted: #70757a;
+        --line: #e5e8df;
+        --accent: #d64030;
+        --accent-dark: #a92d23;
+        --green: #18856f;
+        --yellow: #f7c948;
+        --shadow: 0 16px 40px rgba(31, 35, 30, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      [hidden] {
+        display: none !important;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: #dfe4dd;
+        color: var(--text);
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+          "Microsoft YaHei", sans-serif;
+      }
+
+      button,
+      input,
+      textarea {
+        font: inherit;
+      }
+
+      button {
+        border: 0;
+        cursor: pointer;
+      }
+
+      .shell {
+        width: min(100vw, 430px);
+        min-height: 100vh;
+        margin: 0 auto;
+        background: var(--bg);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.04);
+      }
+
+      .status {
+        height: 34px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 18px;
+        font-size: 12px;
+        font-weight: 700;
+        background: var(--panel);
+      }
+
+      .app {
+        height: calc(100vh - 34px);
+        overflow-y: auto;
+        padding-bottom: 92px;
+        scrollbar-width: none;
+      }
+
+      .app::-webkit-scrollbar {
+        display: none;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        min-height: 54px;
+        padding: 10px 16px;
+        background: rgba(255, 255, 255, 0.94);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid rgba(229, 232, 223, 0.85);
+      }
+
+      .brand {
+        min-width: 0;
+      }
+
+      .brand strong {
+        display: block;
+        font-size: 18px;
+        line-height: 1.1;
+      }
+
+      .brand span {
+        display: block;
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .top-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .admin-link {
+        min-height: 38px;
+        border-radius: 8px;
+        padding: 0 10px;
+        display: inline-flex;
+        align-items: center;
+        color: var(--green);
+        background: #eaf8f4;
+        font-size: 12px;
+        font-weight: 800;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+
+      .login-btn,
+      .primary-btn,
+      .ghost-btn,
+      .pay-btn {
+        min-height: 38px;
+        border-radius: 8px;
+        padding: 0 14px;
+        font-weight: 700;
+      }
+
+      .login-btn,
+      .primary-btn,
+      .pay-btn {
+        color: #fff;
+        background: var(--accent);
+      }
+
+      .ghost-btn {
+        color: var(--accent);
+        background: #fff0ee;
+      }
+
+      .screen {
+        display: none;
+      }
+
+      .screen.active {
+        display: block;
+      }
+
+      .home {
+        padding: 14px 14px 22px;
+      }
+
+      .hero {
+        min-height: 168px;
+        border-radius: 8px;
+        overflow: hidden;
+        position: relative;
+        background:
+          linear-gradient(90deg, rgba(22, 25, 20, 0.76), rgba(22, 25, 20, 0.1)),
+          url("assets/rice-noodle-hero.png") center/cover;
+        color: #fff;
+        display: flex;
+        align-items: flex-end;
+        padding: 18px;
+        box-shadow: var(--shadow);
+      }
+
+      .hero h1 {
+        margin: 0;
+        max-width: 230px;
+        font-size: 27px;
+        line-height: 1.08;
+        letter-spacing: 0;
+      }
+
+      .hero p {
+        margin: 8px 0 0;
+        max-width: 260px;
+        color: rgba(255, 255, 255, 0.86);
+        font-size: 13px;
+      }
+
+      .notice {
+        margin-top: 12px;
+        padding: 10px 12px;
+        border: 1px solid #d9eadf;
+        border-radius: 8px;
+        background: #f5fff8;
+        color: #236650;
+        font-size: 13px;
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 18px 2px 10px;
+      }
+
+      .section-head h2 {
+        margin: 0;
+        font-size: 18px;
+      }
+
+      .section-head span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .category-row {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .category {
+        min-height: 72px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        display: grid;
+        place-items: center;
+        gap: 4px;
+        padding: 8px 4px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .category strong {
+        color: var(--text);
+        font-size: 13px;
+      }
+
+      .category-mark {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: #f3e9d2;
+        color: var(--accent-dark);
+        font-weight: 900;
+      }
+
+      .menu-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .dish {
+        display: grid;
+        grid-template-columns: 86px minmax(0, 1fr);
+        gap: 12px;
+        padding: 10px;
+        border-radius: 8px;
+        background: var(--panel);
+        border: 1px solid var(--line);
+      }
+
+      .dish-art {
+        height: 86px;
+        border-radius: 8px;
+        display: grid;
+        place-items: center;
+        color: #fff;
+        font-weight: 900;
+        font-size: 24px;
+        background: linear-gradient(135deg, #d64030, #18856f);
+      }
+
+      .dish:nth-child(2) .dish-art {
+        background: linear-gradient(135deg, #7856c8, #18856f);
+      }
+
+      .dish:nth-child(3) .dish-art {
+        background: linear-gradient(135deg, #2f6f9f, #d64030);
+      }
+
+      .dish:nth-child(4) .dish-art {
+        background: linear-gradient(135deg, #18856f, #f7c948);
+        color: #1f2c24;
+      }
+
+      .dish h3 {
+        margin: 0;
+        font-size: 16px;
+      }
+
+      .dish p {
+        margin: 5px 0 8px;
+        min-height: 34px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.4;
+      }
+
+      .dish-foot {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+
+      .price {
+        color: var(--accent);
+        font-size: 18px;
+        font-weight: 900;
+      }
+
+      .add-btn,
+      .qty-btn,
+      .icon-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        font-weight: 900;
+      }
+
+      .add-btn {
+        background: var(--accent);
+        color: #fff;
+        font-size: 20px;
+      }
+
+      .cart-bar {
+        position: fixed;
+        left: 50%;
+        bottom: 72px;
+        z-index: 8;
+        width: min(calc(100vw - 28px), 402px);
+        transform: translateX(-50%);
+        background: #222720;
+        color: #fff;
+        border-radius: 8px;
+        min-height: 54px;
+        display: none;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 8px 8px 14px;
+        box-shadow: var(--shadow);
+      }
+
+      .cart-bar.show {
+        display: flex;
+      }
+
+      .cart-bar strong {
+        display: block;
+        font-size: 16px;
+      }
+
+      .cart-bar span {
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 12px;
+      }
+
+      .cart-page,
+      .orders-page,
+      .mine-page {
+        padding: 14px;
+      }
+
+      .panel {
+        border-radius: 8px;
+        background: var(--panel);
+        border: 1px solid var(--line);
+      }
+
+      .cart-items {
+        overflow: hidden;
+      }
+
+      .cart-item {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 12px;
+        padding: 14px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .cart-item:last-child {
+        border-bottom: 0;
+      }
+
+      .cart-item h3 {
+        margin: 0 0 4px;
+        font-size: 15px;
+      }
+
+      .cart-item p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .qty {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .qty-btn {
+        background: #f2f3ef;
+        color: var(--text);
+      }
+
+      .checkout {
+        margin-top: 12px;
+        padding: 14px;
+      }
+
+      .field {
+        display: grid;
+        gap: 6px;
+        margin-bottom: 12px;
+      }
+
+      .field label {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .field input,
+      .field textarea {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fafbf8;
+        padding: 11px 12px;
+        outline: none;
+      }
+
+      .field textarea {
+        min-height: 74px;
+        resize: vertical;
+      }
+
+      .total-line {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 6px;
+        margin-top: 4px;
+        border-top: 1px solid var(--line);
+        font-weight: 900;
+      }
+
+      .pay-btn {
+        width: 100%;
+        margin-top: 12px;
+        min-height: 46px;
+        font-size: 16px;
+      }
+
+      .empty {
+        min-height: 210px;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        color: var(--muted);
+        padding: 24px;
+      }
+
+      .empty strong {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--text);
+        font-size: 18px;
+      }
+
+      .order-card {
+        padding: 14px;
+        margin-bottom: 10px;
+      }
+
+      .order-card header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+
+      .tag {
+        border-radius: 999px;
+        padding: 4px 9px;
+        background: #eaf8f4;
+        color: var(--green);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .order-card h3 {
+        margin: 0;
+        font-size: 15px;
+      }
+
+      .order-card p {
+        margin: 5px 0 0;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .profile {
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .avatar {
+        width: 54px;
+        height: 54px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: var(--green);
+        color: #fff;
+        font-size: 22px;
+        font-weight: 900;
+      }
+
+      .profile strong {
+        display: block;
+        font-size: 18px;
+      }
+
+      .profile span {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .mine-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        margin: 12px 0;
+      }
+
+      .stat {
+        padding: 14px 8px;
+        text-align: center;
+      }
+
+      .stat strong {
+        display: block;
+        font-size: 19px;
+      }
+
+      .stat span {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .list-row {
+        min-height: 48px;
+        padding: 0 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--line);
+        font-weight: 700;
+      }
+
+      .list-row:last-child {
+        border-bottom: 0;
+      }
+
+      .list-row span {
+        color: var(--muted);
+        font-weight: 600;
+      }
+
+      .tabbar {
+        position: fixed;
+        left: 50%;
+        bottom: 0;
+        z-index: 10;
+        width: min(100vw, 430px);
+        height: 64px;
+        transform: translateX(-50%);
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        background: rgba(255, 255, 255, 0.96);
+        border-top: 1px solid var(--line);
+        backdrop-filter: blur(16px);
+      }
+
+      .tab {
+        display: grid;
+        place-items: center;
+        align-content: center;
+        gap: 3px;
+        color: var(--muted);
+        background: transparent;
+        font-size: 11px;
+        font-weight: 800;
+      }
+
+      .tab-icon {
+        width: 22px;
+        height: 22px;
+        border-radius: 7px;
+        display: grid;
+        place-items: center;
+        color: inherit;
+        font-size: 13px;
+        line-height: 1;
+      }
+
+      .tab.active {
+        color: var(--accent);
+      }
+
+      .modal {
+        position: fixed;
+        inset: 0;
+        z-index: 20;
+        display: none;
+        align-items: flex-end;
+        justify-content: center;
+        background: rgba(22, 25, 20, 0.42);
+      }
+
+      .modal.open {
+        display: flex;
+      }
+
+      .auth-card {
+        width: min(100vw, 430px);
+        border-radius: 14px 14px 0 0;
+        background: var(--panel);
+        padding: 18px 16px 20px;
+      }
+
+      .auth-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+      }
+
+      .auth-head h2 {
+        margin: 0;
+        font-size: 20px;
+      }
+
+      .icon-btn {
+        background: #f2f3ef;
+        color: var(--text);
+      }
+
+      .auth-switch {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        padding: 4px;
+        margin-bottom: 14px;
+        border-radius: 8px;
+        background: #f2f3ef;
+      }
+
+      .auth-switch button {
+        min-height: 36px;
+        border-radius: 7px;
+        background: transparent;
+        color: var(--muted);
+        font-weight: 800;
+      }
+
+      .auth-switch button.active {
+        background: var(--panel);
+        color: var(--text);
+        box-shadow: 0 2px 10px rgba(31, 35, 30, 0.08);
+      }
+
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 146px;
+        z-index: 30;
+        transform: translateX(-50%) translateY(12px);
+        min-width: 180px;
+        max-width: min(330px, calc(100vw - 40px));
+        padding: 10px 14px;
+        border-radius: 8px;
+        background: rgba(32, 33, 36, 0.94);
+        color: #fff;
+        text-align: center;
+        font-size: 13px;
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.2s ease;
+      }
+
+      .toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      @media (min-width: 431px) {
+        body {
+          padding: 20px 0;
+        }
+
+        .shell {
+          min-height: calc(100vh - 40px);
+          border-radius: 24px;
+        }
+
+        .app {
+          height: calc(100vh - 74px);
+        }
+
+        .tabbar {
+          bottom: 20px;
+          border-radius: 0 0 24px 24px;
+        }
+
+        .cart-bar {
+          bottom: 92px;
+        }
+
+        .modal {
+          align-items: center;
+        }
+
+        .auth-card {
+          border-radius: 12px;
+          width: 390px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <div class="status">
+        <span>20:30</span>
+        <span>5G 100%</span>
+      </div>
+
+      <div class="app">
+        <header class="topbar">
+          <div class="brand">
+            <strong>嗦粉铺</strong>
+            <span>桂林米粉 · 今日营业</span>
+          </div>
+          <div class="top-actions">
+            <a class="admin-link" href="admin.html">商家后台</a>
+            <button class="login-btn" id="loginButton">登录</button>
+          </div>
+        </header>
+
+        <section class="screen home active" data-screen="home">
+          <div class="hero">
+            <div>
+              <h1>现煮米粉，热乎到手</h1>
+              <p>招牌卤水、牛肉锅烧、酸笋辣椒，支持自提和配送。</p>
+            </div>
+          </div>
+
+          <div class="notice">
+            <strong>满 38 减 5</strong>
+            <span>预计 25 分钟送达</span>
+          </div>
+
+          <div class="section-head">
+            <h2>常用分类</h2>
+            <span>午餐高峰备货中</span>
+          </div>
+          <div class="category-row">
+            <button class="category">
+              <span class="category-mark">粉</span>
+              <strong>招牌粉</strong>
+            </button>
+            <button class="category">
+              <span class="category-mark">肉</span>
+              <strong>加料</strong>
+            </button>
+            <button class="category">
+              <span class="category-mark">菜</span>
+              <strong>小吃</strong>
+            </button>
+            <button class="category">
+              <span class="category-mark">饮</span>
+              <strong>饮品</strong>
+            </button>
+          </div>
+
+          <div class="section-head">
+            <h2>推荐点单</h2>
+            <span>可备注少辣/加辣</span>
+          </div>
+          <div class="menu-list" id="menuList"></div>
+        </section>
+
+        <section class="screen cart-page" data-screen="cart">
+          <div class="section-head">
+            <h2>购物车</h2>
+            <span id="cartSummary">0 件商品</span>
+          </div>
+          <div id="cartContent"></div>
+        </section>
+
+        <section class="screen orders-page" data-screen="orders">
+          <div class="section-head">
+            <h2>订单</h2>
+            <span>近 30 天</span>
+          </div>
+          <div id="ordersContent"></div>
+        </section>
+
+        <section class="screen mine-page" data-screen="mine">
+          <div class="panel profile">
+            <div class="avatar" id="avatar">客</div>
+            <div>
+              <strong id="profileName">未登录</strong>
+              <span id="profilePhone">登录后查看会员权益和订单</span>
+            </div>
+          </div>
+
+          <div class="mine-grid">
+            <div class="panel stat">
+              <strong id="couponCount">2</strong>
+              <span>优惠券</span>
+            </div>
+            <div class="panel stat">
+              <strong id="pointsCount">128</strong>
+              <span>积分</span>
+            </div>
+            <div class="panel stat">
+              <strong id="orderCount">0</strong>
+              <span>订单</span>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="list-row">收货地址 <span>去管理</span></div>
+            <div class="list-row">口味偏好 <span>微辣</span></div>
+            <div class="list-row">联系客服 <span>营业中</span></div>
+            <div class="list-row">门店信息 <span>2.1km</span></div>
+          </div>
+        </section>
+      </div>
+
+      <div class="cart-bar" id="cartBar">
+        <div>
+          <strong id="cartBarTotal">¥0</strong>
+          <span id="cartBarCount">0 件商品</span>
+        </div>
+        <button class="primary-btn" data-jump="cart">去结算</button>
+      </div>
+
+      <nav class="tabbar">
+        <button class="tab active" data-tab="home">
+          <span class="tab-icon">⌂</span>
+          首页
+        </button>
+        <button class="tab" data-tab="cart">
+          <span class="tab-icon">□</span>
+          购物车
+        </button>
+        <button class="tab" data-tab="orders">
+          <span class="tab-icon">≡</span>
+          订单
+        </button>
+        <button class="tab" data-tab="mine">
+          <span class="tab-icon">○</span>
+          我的
+        </button>
+      </nav>
+    </main>
+
+    <div class="modal" id="authModal" aria-hidden="true">
+      <div class="auth-card">
+        <div class="auth-head">
+          <h2 id="authTitle">登录</h2>
+          <button class="icon-btn" id="closeAuth" aria-label="关闭">×</button>
+        </div>
+        <div class="auth-switch">
+          <button class="active" data-auth-mode="login">登录</button>
+          <button data-auth-mode="register">注册</button>
+        </div>
+        <form id="authForm">
+          <div class="field" id="nameField" hidden>
+            <label for="nameInput">昵称</label>
+            <input id="nameInput" placeholder="例如：张三" />
+          </div>
+          <div class="field">
+            <label for="phoneInput">手机号</label>
+            <input id="phoneInput" inputmode="tel" placeholder="请输入手机号" />
+          </div>
+          <div class="field">
+            <label for="codeInput">验证码</label>
+            <input id="codeInput" inputmode="numeric" placeholder="任意 4 位数字" />
+          </div>
+          <button class="pay-btn" type="submit" id="authSubmit">登录</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+      const dishes = [
+        {
+          id: "classic",
+          mark: "招",
+          name: "招牌卤水米粉",
+          desc: "卤水、锅烧、酸豆角、花生、葱花，默认微辣。",
+          price: 16,
+        },
+        {
+          id: "beef",
+          mark: "牛",
+          name: "牛肉鲜汤米粉",
+          desc: "鲜汤打底，牛肉片加量，适合不吃辣的客人。",
+          price: 22,
+        },
+        {
+          id: "spicy",
+          mark: "辣",
+          name: "酸辣螺味米粉",
+          desc: "酸笋、木耳、腐竹、辣椒油，口味更重。",
+          price: 19,
+        },
+        {
+          id: "combo",
+          mark: "套",
+          name: "双人嗦粉套餐",
+          desc: "两份招牌粉，加锅烧和饮品，适合午餐拼单。",
+          price: 39,
+        },
+      ];
+
+      const state = {
+        tab: "home",
+        authMode: "login",
+        user: null,
+        cart: {},
+        orders: [],
+      };
+
+      const $ = (selector) => document.querySelector(selector);
+      const $$ = (selector) => [...document.querySelectorAll(selector)];
+
+      function money(value) {
+        return `¥${value.toFixed(value % 1 === 0 ? 0 : 1)}`;
+      }
+
+      function cartEntries() {
+        return dishes
+          .map((dish) => ({ ...dish, qty: state.cart[dish.id] || 0 }))
+          .filter((dish) => dish.qty > 0);
+      }
+
+      function cartTotal() {
+        return cartEntries().reduce((sum, item) => sum + item.price * item.qty, 0);
+      }
+
+      function cartCount() {
+        return cartEntries().reduce((sum, item) => sum + item.qty, 0);
+      }
+
+      function toast(message) {
+        const node = $("#toast");
+        node.textContent = message;
+        node.classList.add("show");
+        clearTimeout(window.toastTimer);
+        window.toastTimer = setTimeout(() => node.classList.remove("show"), 1600);
+      }
+
+      function switchTab(tab) {
+        state.tab = tab;
+        $$(".screen").forEach((screen) =>
+          screen.classList.toggle("active", screen.dataset.screen === tab),
+        );
+        $$(".tab").forEach((button) =>
+          button.classList.toggle("active", button.dataset.tab === tab),
+        );
+        render();
+      }
+
+      function addToCart(id, delta = 1) {
+        state.cart[id] = Math.max(0, (state.cart[id] || 0) + delta);
+        if (state.cart[id] === 0) delete state.cart[id];
+        render();
+      }
+
+      function renderMenu() {
+        $("#menuList").innerHTML = dishes
+          .map(
+            (dish) => `
+              <article class="dish">
+                <div class="dish-art">${dish.mark}</div>
+                <div>
+                  <h3>${dish.name}</h3>
+                  <p>${dish.desc}</p>
+                  <div class="dish-foot">
+                    <span class="price">${money(dish.price)}</span>
+                    <button class="add-btn" data-add="${dish.id}" aria-label="加入购物车">+</button>
+                  </div>
+                </div>
+              </article>
+            `,
+          )
+          .join("");
+      }
+
+      function renderCart() {
+        const entries = cartEntries();
+        $("#cartSummary").textContent = `${cartCount()} 件商品`;
+        if (!entries.length) {
+          $("#cartContent").innerHTML = `
+            <div class="panel empty">
+              <div>
+                <strong>购物车是空的</strong>
+                <span>去首页选择一碗热米粉</span>
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+        $("#cartContent").innerHTML = `
+          <div class="panel cart-items">
+            ${entries
+              .map(
+                (item) => `
+                  <div class="cart-item">
+                    <div>
+                      <h3>${item.name}</h3>
+                      <p>${money(item.price)} / 份</p>
+                    </div>
+                    <div class="qty">
+                      <button class="qty-btn" data-minus="${item.id}" aria-label="减少">−</button>
+                      <strong>${item.qty}</strong>
+                      <button class="qty-btn" data-add="${item.id}" aria-label="增加">+</button>
+                    </div>
+                  </div>
+                `,
+              )
+              .join("")}
+          </div>
+          <div class="panel checkout">
+            <div class="field">
+              <label for="addressInput">收货地址</label>
+              <input id="addressInput" value="桂林市七星区 漓江路 88 号" />
+            </div>
+            <div class="field">
+              <label for="remarkInput">订单备注</label>
+              <textarea id="remarkInput" placeholder="少辣、不要葱、加酸笋等"></textarea>
+            </div>
+            <div class="total-line">
+              <span>合计</span>
+              <span>${money(cartTotal())}</span>
+            </div>
+            <button class="pay-btn" id="placeOrder">提交订单</button>
+          </div>
+        `;
+      }
+
+      function renderCartBar() {
+        const count = cartCount();
+        $("#cartBar").classList.toggle("show", count > 0 && state.tab !== "cart");
+        $("#cartBarTotal").textContent = money(cartTotal());
+        $("#cartBarCount").textContent = `${count} 件商品`;
+      }
+
+      function renderOrders() {
+        if (!state.orders.length) {
+          $("#ordersContent").innerHTML = `
+            <div class="panel empty">
+              <div>
+                <strong>暂无订单</strong>
+                <span>下单后可在这里查看状态</span>
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+        $("#ordersContent").innerHTML = state.orders
+          .map(
+            (order) => `
+              <article class="panel order-card">
+                <header>
+                  <h3>${order.title}</h3>
+                  <span class="tag">${order.status}</span>
+                </header>
+                <p>${order.items}</p>
+                <p>${order.time} · ${money(order.total)}</p>
+              </article>
+            `,
+          )
+          .join("");
+      }
+
+      function renderProfile() {
+        const user = state.user;
+        $("#loginButton").textContent = user ? "已登录" : "登录";
+        $("#profileName").textContent = user ? user.name : "未登录";
+        $("#profilePhone").textContent = user ? user.phone : "登录后查看会员权益和订单";
+        $("#avatar").textContent = user ? user.name.slice(0, 1) : "客";
+        $("#orderCount").textContent = state.orders.length;
+      }
+
+      function render() {
+        renderMenu();
+        renderCart();
+        renderCartBar();
+        renderOrders();
+        renderProfile();
+      }
+
+      function openAuth() {
+        $("#authModal").classList.add("open");
+        $("#authModal").setAttribute("aria-hidden", "false");
+      }
+
+      function closeAuth() {
+        $("#authModal").classList.remove("open");
+        $("#authModal").setAttribute("aria-hidden", "true");
+      }
+
+      function setAuthMode(mode) {
+        state.authMode = mode;
+        $("#authTitle").textContent = mode === "login" ? "登录" : "注册";
+        $("#authSubmit").textContent = mode === "login" ? "登录" : "注册并登录";
+        $("#nameField").hidden = mode === "login";
+        $$("[data-auth-mode]").forEach((button) =>
+          button.classList.toggle("active", button.dataset.authMode === mode),
+        );
+      }
+
+      document.addEventListener("click", (event) => {
+        const target = event.target.closest("button");
+        if (!target) return;
+
+        if (target.dataset.tab) switchTab(target.dataset.tab);
+        if (target.dataset.jump) switchTab(target.dataset.jump);
+        if (target.dataset.add) addToCart(target.dataset.add, 1);
+        if (target.dataset.minus) addToCart(target.dataset.minus, -1);
+        if (target.dataset.authMode) setAuthMode(target.dataset.authMode);
+        if (target.id === "loginButton") openAuth();
+        if (target.id === "closeAuth") closeAuth();
+        if (target.id === "placeOrder") {
+          const entries = cartEntries();
+          if (!entries.length) return;
+          state.orders.unshift({
+            title: `订单 ${String(state.orders.length + 1).padStart(3, "0")}`,
+            items: entries.map((item) => `${item.name} x${item.qty}`).join("，"),
+            total: cartTotal(),
+            status: "制作中",
+            time: new Date().toLocaleTimeString("zh-CN", {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+          });
+          state.cart = {};
+          toast("订单已提交");
+          switchTab("orders");
+        }
+      });
+
+      $("#authForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const phone = $("#phoneInput").value.trim() || "138 0000 8888";
+        const name =
+          state.authMode === "register"
+            ? $("#nameInput").value.trim() || "新客户"
+            : "老客户";
+        state.user = { name, phone };
+        closeAuth();
+        toast("登录成功");
+        render();
+      });
+
+      $("#authModal").addEventListener("click", (event) => {
+        if (event.target.id === "authModal") closeAuth();
+      });
+
+      render();
+    </script>
+  </body>
+</html>

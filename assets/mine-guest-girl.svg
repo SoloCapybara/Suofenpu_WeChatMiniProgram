@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="360" viewBox="0 0 360 360">
+  <defs>
+    <linearGradient id="apron" x1="130" y1="190" x2="230" y2="338" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ff9a3f"/>
+      <stop offset="1" stop-color="#ff6812"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="48%" r="55%">
+      <stop offset="0" stop-color="#fff8ef"/>
+      <stop offset="1" stop-color="#ffe1bd"/>
+    </radialGradient>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#b56a22" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+  <circle cx="180" cy="180" r="156" fill="url(#glow)" opacity="0.75"/>
+  <g filter="url(#softShadow)">
+    <path d="M118 142c-8-48 23-88 67-88 43 0 73 34 70 80-2 31-21 61-68 61-40 0-64-22-69-53z" fill="#5b351e"/>
+    <circle cx="142" cy="85" r="29" fill="#5b351e"/>
+    <circle cx="192" cy="71" r="36" fill="#6c4126"/>
+    <circle cx="221" cy="88" r="30" fill="#5a341f"/>
+    <path d="M94 184c-11-17-8-39 6-47 15-8 32 2 41 19l21 40-26 14-20-19c-5 4-14 3-22-7z" fill="#ffd2b7"/>
+    <path d="M100 143c-10-13-27-20-39-12-8 5-10 17-4 25 7 10 21 8 28-2 3 11 11 20 24 27" fill="none" stroke="#ffbd9b" stroke-width="9" stroke-linecap="round"/>
+    <ellipse cx="183" cy="142" rx="69" ry="71" fill="#ffd7bf"/>
+    <path d="M121 129c30-2 56-16 73-42 11 25 32 39 58 44-7-39-32-63-68-63-35 0-61 23-63 61z" fill="#704127"/>
+    <circle cx="155" cy="149" r="7" fill="#5c3927"/>
+    <circle cx="213" cy="149" r="7" fill="#5c3927"/>
+    <circle cx="137" cy="173" r="13" fill="#ff9e8b" opacity="0.72"/>
+    <circle cx="228" cy="173" r="13" fill="#ff9e8b" opacity="0.72"/>
+    <path d="M167 176c8 8 24 8 33 0" fill="none" stroke="#7a3d26" stroke-width="6" stroke-linecap="round"/>
+    <path d="M116 332c5-72 30-113 68-113s63 41 68 113H116z" fill="url(#apron)"/>
+    <path d="M138 228c17 13 71 13 91 0l-13-31h-65l-13 31z" fill="#fff4ec"/>
+    <rect x="142" y="255" width="84" height="36" rx="18" fill="#fff" opacity="0.94"/>
+    <circle cx="160" cy="273" r="10" fill="#ff7620"/>
+    <path d="M157 273h6m-3-3v6" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+    <text x="178" y="280" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700" fill="#ff7620">嗦粉铺</text>
+  </g>
+</svg>

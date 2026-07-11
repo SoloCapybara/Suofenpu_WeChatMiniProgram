@@ -1,0 +1,673 @@
+<view class="page">
+  <scroll-view class="content" scroll-y="{{tab !== 'menu'}}" enhanced show-scrollbar="{{false}}">
+    <view wx:if="{{tab === 'home'}}" class="screen home">
+      <swiper
+        class="hero-swiper"
+        indicator-dots="{{true}}"
+        indicator-color="rgba(255,255,255,0.82)"
+        indicator-active-color="#ff7a10"
+        autoplay="{{true}}"
+        circular="{{true}}"
+        interval="3200"
+        duration="450"
+      >
+        <swiper-item wx:for="{{banners}}" wx:key="image">
+          <view class="hero-card">
+            <image class="hero-image" src="{{item.image}}" mode="aspectFill"></image>
+            <view class="hero-mask"></view>
+            <view class="hero-text">
+              <text class="hero-title">{{item.title}}</text>
+              <text class="hero-title red">{{item.highlight}}</text>
+              <text class="hero-badge">{{item.badge}}</text>
+            </view>
+          </view>
+        </swiper-item>
+      </swiper>
+
+      <view class="notice-card">
+        <text class="notice-icon">喇</text>
+        <text class="notice-text">公告 今日现煮现卖，堂食外卖均可下单</text>
+        <text class="notice-arrow">›</text>
+      </view>
+
+      <view class="recommend-card">
+        <view class="module-head">
+          <text class="module-title">招牌推荐</text>
+          <text class="module-more">更多 ›</text>
+        </view>
+        <scroll-view class="recommend-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+          <view class="recommend-track">
+            <view class="product-card" wx:for="{{dishes}}" wx:key="id">
+              <image class="product-image" src="{{item.imageUrl}}" mode="aspectFill"></image>
+              <view class="product-info">
+                <text class="product-name">{{item.name}}</text>
+                <text class="product-desc">{{item.shortDesc}}</text>
+                <view class="product-foot">
+                  <text class="product-price">{{item.priceText}}</text>
+                  <button class="round-add" data-id="{{item.id}}" bindtap="openSpec">
+                    <view class="plus-icon">
+                      <view class="plus-line horizontal"></view>
+                      <view class="plus-line vertical"></view>
+                    </view>
+                  </button>
+                </view>
+              </view>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+
+    </view>
+
+    <view wx:elif="{{tab === 'menu'}}" class="screen menu-page">
+      <view class="menu-search">
+        <image src="/assets/icons/lucide/search.svg" mode="aspectFit"></image>
+        <input
+          value="{{menuKeyword}}"
+          placeholder="搜索螺蛳粉、小吃、饮品"
+          placeholder-class="menu-search-placeholder"
+          bindinput="onMenuSearchInput"
+        />
+      </view>
+
+      <view class="menu-shell">
+        <scroll-view class="menu-category-list" scroll-y enhanced show-scrollbar="{{false}}">
+          <view
+            wx:for="{{menuCategories}}"
+            wx:key="key"
+            class="menu-category {{activeMenuCategory === item.key ? 'active' : ''}}"
+            data-key="{{item.key}}"
+            bindtap="switchMenuCategory"
+          >
+            <image src="{{item.icon}}" mode="aspectFit"></image>
+            <text>{{item.name}}</text>
+          </view>
+        </scroll-view>
+
+        <scroll-view class="menu-section-list" scroll-y enhanced show-scrollbar="{{false}}" scroll-into-view="{{activeMenuSectionId}}" scroll-with-animation="{{true}}">
+          <block wx:for="{{menuSections}}" wx:key="key">
+            <view wx:if="{{item.visible}}" id="{{item.id}}" class="menu-section">
+              <view class="menu-section-head">
+                <view class="menu-section-title">
+                  <image src="{{item.icon}}" mode="aspectFit"></image>
+                  <text>{{item.name}}</text>
+                </view>
+                <text class="menu-more">更多 ›</text>
+              </view>
+              <scroll-view class="menu-product-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+                <view class="menu-product-track">
+                  <view class="menu-product-card" wx:for="{{item.items}}" wx:for-item="dish" wx:key="id">
+                    <view class="menu-product-image-wrap">
+                      <image class="menu-product-image" src="{{dish.imageUrl}}" mode="aspectFill"></image>
+                      <text wx:if="{{dish.badgeText}}" class="menu-product-badge">{{dish.badgeText}}</text>
+                    </view>
+                    <view class="menu-product-body">
+                      <text class="menu-product-name">{{dish.name}}</text>
+                      <text class="menu-product-desc">{{dish.shortDesc}}</text>
+                      <view class="menu-product-foot">
+                        <text class="menu-product-price">{{dish.priceText}}</text>
+                        <view class="menu-product-actions">
+                          <button wx:if="{{dish.qty > 0}}" class="qty-btn" data-id="{{dish.id}}" bindtap="reduceDish">-</button>
+                          <text wx:if="{{dish.qty > 0}}" class="qty-count">{{dish.qty}}</text>
+                          <button class="round-add" data-id="{{dish.id}}" bindtap="openSpec">
+                            <view class="plus-icon">
+                              <view class="plus-line horizontal"></view>
+                              <view class="plus-line vertical"></view>
+                            </view>
+                          </button>
+                        </view>
+                      </view>
+                    </view>
+                  </view>
+                </view>
+              </scroll-view>
+            </view>
+          </block>
+          <view wx:if="{{menuHasNoResult}}" class="menu-search-empty">
+            <text>没有找到相关商品</text>
+          </view>
+        </scroll-view>
+      </view>
+    </view>
+
+    <view wx:elif="{{tab === 'cart'}}" class="screen cart-page">
+      <view class="cart-hero">
+        <view>
+          <text class="cart-page-title">购物车</text>
+          <text class="cart-page-sub">{{cartCount}}件商品</text>
+        </view>
+      </view>
+
+      <view wx:if="{{!user}}" class="order-empty-card cart-login-card">
+        <view class="cart-login-illustration">
+          <view class="cart-login-basket">
+            <view class="cart-login-handle"></view>
+            <view class="cart-login-wheel left"></view>
+            <view class="cart-login-wheel right"></view>
+          </view>
+          <view class="cart-login-badge">登录</view>
+        </view>
+        <text class="order-empty-title">未登录</text>
+        <text class="order-empty-sub">登录后可添加商品并提交订单</text>
+        <button class="order-empty-btn" bindtap="goMineLogin">去登录</button>
+      </view>
+
+      <view wx:elif="{{cartItems.length === 0}}" class="order-empty-card cart-login-card">
+        <view class="cart-login-illustration">
+          <view class="cart-login-basket empty-cart-basket">
+            <view class="cart-login-handle"></view>
+            <view class="cart-login-wheel left"></view>
+            <view class="cart-login-wheel right"></view>
+          </view>
+          <view class="cart-login-badge">空空</view>
+        </view>
+        <text class="order-empty-title">购物车是空的</text>
+        <text class="order-empty-sub">去菜单选择一碗热粉</text>
+        <button class="order-empty-btn" data-tab="menu" bindtap="switchTab">去点餐</button>
+      </view>
+
+      <block wx:else>
+        <view class="cart-product-card">
+          <view class="cart-item" wx:for="{{cartItems}}" wx:key="key">
+            <image class="cart-dish-image" src="{{item.imageUrl}}" mode="aspectFill"></image>
+            <view class="cart-main">
+              <text class="cart-name">{{item.name}}</text>
+              <text class="cart-meta">{{item.optionText}}</text>
+              <text wx:if="{{item.remark}}" class="cart-remark">备注：{{item.remark}}</text>
+              <text class="cart-unit-price">{{item.unitPriceText}} / 份</text>
+            </view>
+            <view class="cart-qty">
+              <button class="qty-btn" data-key="{{item.key}}" data-delta="-1" bindtap="changeCartItemQty">-</button>
+              <text class="qty-count">{{item.qty}}</text>
+              <button class="qty-btn orange" data-key="{{item.key}}" data-delta="1" bindtap="changeCartItemQty">+</button>
+            </view>
+          </view>
+        </view>
+
+        <view class="cart-info-card">
+          <view class="cart-info-row address-row">
+            <view class="cart-row-left">
+              <view class="cart-line-icon pin-icon"></view>
+              <view>
+                <text class="cart-row-title">收货地址</text>
+                <input class="cart-inline-input" value="{{receiverPhone}}" bindinput="onPhoneInput" placeholder="请输入联系电话" />
+                <input class="cart-address-input" value="{{address}}" bindinput="onAddressInput" placeholder="请输入收货地址" />
+              </view>
+            </view>
+            <text class="cart-row-arrow">›</text>
+          </view>
+          <view class="cart-info-row">
+            <view class="cart-row-left">
+              <view class="cart-line-icon clock-icon"></view>
+              <text class="cart-row-title">送达时间</text>
+            </view>
+            <text class="cart-row-value active">{{deliveryTime}} · 约30分钟送达</text>
+            <text class="cart-row-arrow">›</text>
+          </view>
+          <view class="cart-info-row">
+            <view class="cart-row-left">
+              <view class="cart-line-icon receipt-icon"></view>
+              <text class="cart-row-title">发票</text>
+            </view>
+            <text class="cart-row-value">{{invoiceType}}</text>
+            <text class="cart-row-arrow">›</text>
+          </view>
+          <view class="cart-info-row">
+            <view class="cart-row-left">
+              <view class="cart-line-icon coupon-line-icon"></view>
+              <text class="cart-row-title">优惠券</text>
+            </view>
+            <text class="cart-row-value active">{{couponSummaryText}}</text>
+            <text class="cart-row-arrow">›</text>
+          </view>
+          <view class="cart-remark-block">
+            <text class="cart-remark-title">订单备注</text>
+            <view class="cart-remark-box">
+              <textarea maxlength="50" value="{{orderRemark}}" bindinput="onOrderRemarkInput" placeholder="整单备注，例如：骑手请放前台、不要电话等"></textarea>
+              <text>{{orderRemarkLength}}/50</text>
+            </view>
+          </view>
+        </view>
+
+        <view class="cart-summary-card">
+          <view class="bill">
+            <view class="bill-line"><text>商品小计</text><text>{{subtotalText}}</text></view>
+            <view class="bill-line"><text>打包费</text><text>{{packingFeeText}}</text></view>
+            <view class="bill-line"><text>配送费</text><text>{{deliveryFeeText}}</text></view>
+            <view class="bill-line discount"><text>优惠券</text><text>{{couponDiscountText}}</text></view>
+          </view>
+          <view class="total-line">
+            <text>应付合计</text>
+            <text>{{cartTotalText}}</text>
+          </view>
+          <button class="pay-btn" bindtap="placeOrder">提交订单</button>
+        </view>
+      </block>
+    </view>
+
+    <view wx:elif="{{tab === 'orders'}}" class="screen order-page">
+      <view class="order-tabs">
+        <view
+          wx:for="{{orderTabs}}"
+          wx:key="key"
+          class="order-tab {{activeOrderTab === item.key ? 'active' : ''}}"
+          data-key="{{item.key}}"
+          bindtap="switchOrderTab"
+        >
+          <text>{{item.label}}</text>
+        </view>
+      </view>
+
+      <view wx:if="{{!user}}" class="order-empty-card">
+        <view class="empty-illustration">
+          <view class="empty-bowl">嗦</view>
+          <view class="empty-bag">客</view>
+          <view class="empty-ticket">登录</view>
+        </view>
+        <text class="order-empty-title">未登录</text>
+        <text class="order-empty-sub">登录后可查看订单状态和历史订单</text>
+        <button class="order-empty-btn" bindtap="goMineLogin">去登录</button>
+      </view>
+
+      <view wx:elif="{{visibleOrders.length === 0}}" class="order-empty-card">
+        <view class="empty-illustration">
+          <view class="empty-bowl">嗦</view>
+          <view class="empty-bag">嗦</view>
+          <view class="empty-ticket">暂无订单</view>
+        </view>
+        <text class="order-empty-title">暂无订单</text>
+        <text class="order-empty-sub">下单后可在这里查看订单状态</text>
+        <button class="order-empty-btn" data-tab="menu" bindtap="switchTab">去点餐</button>
+      </view>
+
+      <view wx:else class="order-list">
+        <view class="order-card-v2" wx:for="{{visibleOrders}}" wx:key="id">
+          <image class="order-dish-image" src="{{item.imageUrl}}" mode="aspectFill"></image>
+          <view class="order-card-main">
+            <view class="order-card-top">
+              <text class="order-no">订单号 {{item.orderNo}}</text>
+              <text class="order-time">{{item.dayText}} {{item.time}}</text>
+            </view>
+            <view class="order-card-mid">
+              <view>
+                <text class="order-dish-title">{{item.title}}</text>
+                <view class="order-tag-row">
+                  <text wx:for="{{item.optionTags}}" wx:key="*this" class="order-option-tag">{{item}}</text>
+                </view>
+                <text class="order-qty">{{item.quantityText}}</text>
+              </view>
+              <view class="order-pay-side">
+                <text class="order-status-pill {{item.isCompleted ? 'done' : ''}}">{{item.status}}</text>
+                <view class="order-paid">
+                  <text>实付</text>
+                  <text>{{item.totalText}}</text>
+                </view>
+              </view>
+            </view>
+            <view class="order-card-bottom">
+              <view class="order-tip">
+                <text wx:if="{{item.isPending}}">剩余 23:59 自动取消</text>
+                <text wx:elif="{{item.isProcessing}}">骑手已取餐，预计 {{item.deliveryTime}} 送达</text>
+                <text wx:elif="{{item.isCompleted}}">订单已完成，欢迎再次下单</text>
+                <text wx:else>订单状态已更新</text>
+              </view>
+              <view class="order-actions">
+                <button wx:if="{{item.isPending}}" class="order-action ghost">取消订单</button>
+                <button wx:if="{{item.isPending}}" class="order-action primary">去支付</button>
+                <button wx:if="{{item.isProcessing}}" class="order-action outline">联系骑手</button>
+                <button wx:if="{{item.isProcessing}}" class="order-action ghost">查看详情</button>
+                <button wx:if="{{item.isCompleted}}" class="order-action outline">再来一单</button>
+                <button wx:if="{{item.isCompleted}}" class="order-action ghost">评价</button>
+                <button wx:if="{{item.isOther}}" class="order-action ghost">查看详情</button>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view wx:else class="screen mine-page">
+      <block wx:if="{{!user}}">
+        <view class="mine-guest-hero">
+          <image class="mine-guest-girl" src="/assets/mine-guest-staff-3d.png" mode="aspectFit"></image>
+          <view class="mine-guest-copy">
+            <text class="mine-guest-title">未登录</text>
+            <text class="mine-guest-sub">登录后可查看订单、积分、优惠券</text>
+          </view>
+        </view>
+
+        <view class="mine-benefit-card">
+          <text class="mine-section-title">登录后可享受</text>
+          <view class="mine-benefit-grid">
+            <view class="mine-benefit-item">
+              <view class="mine-benefit-icon">
+                <image src="/assets/icons/lucide/order.svg" mode="aspectFit"></image>
+              </view>
+              <text class="mine-benefit-name">查看订单</text>
+              <text class="mine-benefit-desc">订单状态随时查</text>
+            </view>
+            <view class="mine-benefit-item">
+              <view class="mine-benefit-icon">
+                <image src="/assets/icons/lucide/ticket.svg" mode="aspectFit"></image>
+              </view>
+              <text class="mine-benefit-name">领取优惠券</text>
+              <text class="mine-benefit-desc">专属优惠享不停</text>
+            </view>
+            <view class="mine-benefit-item">
+              <view class="mine-benefit-icon">
+                <image src="/assets/icons/lucide/coins.svg" mode="aspectFit"></image>
+              </view>
+              <text class="mine-benefit-name">积分福利</text>
+              <text class="mine-benefit-desc">积分兑好礼</text>
+            </view>
+            <view class="mine-benefit-item">
+              <view class="mine-benefit-icon">
+                <image src="/assets/icons/lucide/crown.svg" mode="aspectFit"></image>
+              </view>
+              <text class="mine-benefit-name">会员权益</text>
+              <text class="mine-benefit-desc">专属特权享受</text>
+            </view>
+          </view>
+        </view>
+
+        <view class="mine-welcome-card">
+          <image class="mine-welcome-bg" src="/assets/mine-welcome-noodle-banner.png" mode="aspectFill"></image>
+          <view class="mine-welcome-copy">
+            <text class="mine-welcome-title">欢迎来到嗦粉铺</text>
+            <text class="mine-welcome-sub">登录开启美味之旅</text>
+            <text class="mine-welcome-sub">更多优惠等你发现</text>
+          </view>
+        </view>
+
+        <view class="mine-login-card">
+          <text class="mine-login-title">登录嗦粉铺，开启美味体验</text>
+          <button class="mine-phone-btn" bindtap="phoneLoginTodo">
+            <image src="/assets/icons/lucide/smartphone.svg" mode="aspectFit"></image>
+            <text>手机号登录</text>
+          </button>
+          <button class="mine-wechat-btn" loading="{{loginLoading}}" bindtap="wechatLogin">
+            <image src="/assets/icons/wechat.svg" mode="aspectFit"></image>
+            <text>微信一键登录</text>
+          </button>
+          <view class="mine-login-agreement" bindtap="toggleLoginAgreement">
+            <view class="small-check {{loginAgreementChecked ? 'checked' : ''}}">✓</view>
+            <text>已阅读并同意</text>
+            <text class="link">《用户协议》</text>
+            <text>与</text>
+            <text class="link">《隐私政策》</text>
+          </view>
+        </view>
+      </block>
+
+      <block wx:else>
+      <view class="mine-profile-card">
+        <image class="mine-avatar" src="{{user ? user.avatarUrl : '/assets/avatars/guest.png'}}" mode="aspectFill"></image>
+        <view class="mine-user-main">
+          <text class="mine-user-name">{{user ? user.name : '未登录'}}</text>
+          <text class="mine-user-phone">{{user ? user.phone : '登录后同步订单'}}</text>
+        </view>
+      </view>
+
+      <view wx:if="{{user}}" class="mine-stat-grid">
+        <view class="mine-stat-card">
+          <view class="mine-stat-icon ticket-icon"></view>
+          <text class="mine-stat-num">0</text>
+          <text class="mine-stat-label">优惠券</text>
+        </view>
+        <view class="mine-stat-card">
+          <view class="mine-stat-icon point-icon">★</view>
+          <text class="mine-stat-num">0</text>
+          <text class="mine-stat-label">积分</text>
+        </view>
+        <view class="mine-stat-card">
+          <view class="mine-stat-icon order-icon"></view>
+          <text class="mine-stat-num">{{orders.length}}</text>
+          <text class="mine-stat-label">订单</text>
+        </view>
+      </view>
+
+      <view class="mine-menu-card">
+        <view class="mine-list-row hover-touch">
+          <view class="mine-row-left">
+            <image class="mine-row-icon" src="/assets/icons/lucide/headphones.svg" mode="aspectFit"></image>
+            <text>联系客服</text>
+          </view>
+          <view class="mine-row-right">
+            <text>营业中</text>
+            <text class="mine-arrow">›</text>
+          </view>
+        </view>
+        <view class="mine-list-row hover-touch">
+          <view class="mine-row-left">
+            <image class="mine-row-icon" src="/assets/icons/lucide/store.svg" mode="aspectFit"></image>
+            <text>门店信息</text>
+          </view>
+          <view class="mine-row-right">
+            <text>2.1km</text>
+            <text class="mine-arrow">›</text>
+          </view>
+        </view>
+        <view class="mine-list-row hover-touch">
+          <view class="mine-row-left">
+            <image class="mine-row-icon" src="/assets/icons/lucide/map-pin.svg" mode="aspectFit"></image>
+            <text>地址管理</text>
+          </view>
+          <view class="mine-row-right">
+            <text class="mine-arrow">›</text>
+          </view>
+        </view>
+        <view wx:if="{{user}}" class="mine-list-row danger-row hover-touch" bindtap="logout">
+          <view class="mine-row-left">
+            <image class="mine-row-icon" src="/assets/icons/lucide/log-out.svg" mode="aspectFit"></image>
+            <text>退出登录</text>
+          </view>
+          <view class="mine-row-right">
+            <text class="mine-arrow">›</text>
+          </view>
+        </view>
+      </view>
+      </block>
+    </view>
+  </scroll-view>
+
+  <view wx:if="{{showAgreementModal}}" class="agreement-layer">
+    <view class="agreement-logo">嗦</view>
+    <text class="agreement-title">温馨提示</text>
+    <scroll-view class="agreement-scroll" scroll-y enhanced show-scrollbar="{{false}}">
+      <view class="agreement-copy">
+        <text>我们依据相关法律法规制定了</text>
+        <text class="link" bindtap="openUserAgreement">《嗦粉铺用户协议》</text>
+        <text>和</text>
+        <text class="link" bindtap="openPrivacyPolicy">《嗦粉铺隐私政策》</text>
+        <text>。请您在使用前仔细阅读并充分理解相关条款。</text>
+      </view>
+      <view class="agreement-copy strong">
+        <text>我们非常重视您的个人信息保护。仅在下单支付、配送收货、会员权益等必要场景收集完成服务所需的信息。</text>
+      </view>
+      <view class="agreement-copy">
+        <text>我们不会默认开启设备权限。只有在您使用定位选择附近门店、填写配送地址等功能时，才会单独向您申请授权。</text>
+      </view>
+      <view class="agreement-copy">
+        <text>您点击同意，仅表示已了解我们提供的基本功能及所需信息，不代表同意收集非必要信息。</text>
+      </view>
+    </scroll-view>
+    <view class="agreement-check" bindtap="toggleAgreementCheck">
+      <view class="check-circle {{agreementChecked ? 'checked' : ''}}">✓</view>
+      <text>允许我们在必要场景下合理使用您的个人信息，且已阅读并同意</text>
+      <text class="link">《隐私政策》</text>
+      <text class="link">《用户协议》</text>
+    </view>
+    <view class="agreement-actions">
+      <button class="outline-action" bindtap="browseOnly">拒绝仅浏览</button>
+      <button class="solid-action" bindtap="acceptAgreement">同意</button>
+    </view>
+  </view>
+
+  <view wx:if="{{showLoginModal}}" class="auth-mask" catchtap="closeLogin" catchtouchmove="noop">
+    <view class="auth-sheet" catchtap="noop" style="transform: translateY({{authSheetTranslateY}}px); transition: {{authSheetTransition}};">
+      <view class="auth-drag-hit" catchtouchstart="onAuthSheetTouchStart" catchtouchmove="onAuthSheetTouchMove" catchtouchend="onAuthSheetTouchEnd" catchtouchcancel="onAuthSheetTouchEnd">
+        <view class="auth-drag-bar"></view>
+      </view>
+      <button class="auth-close" bindtap="closeLogin">
+        <image src="/assets/icons/lucide/x.svg" mode="aspectFit"></image>
+      </button>
+      <view class="auth-top">
+        <view class="auth-logo">嗦</view>
+        <view>
+          <text class="auth-title">嗦粉铺欢迎您</text>
+          <text class="auth-sub">登录后可同步订单、领取优惠券和使用会员权益</text>
+        </view>
+      </view>
+      <view class="auth-benefits">
+        <view class="auth-benefit">
+          <view class="auth-benefit-icon">
+            <image src="/assets/icons/lucide/order.svg" mode="aspectFit"></image>
+          </view>
+          <view>
+            <text class="auth-benefit-title">订单同步</text>
+            <text class="auth-benefit-desc">随时查看订单</text>
+          </view>
+        </view>
+        <view class="auth-benefit">
+          <view class="auth-benefit-icon">
+            <image src="/assets/icons/lucide/ticket.svg" mode="aspectFit"></image>
+          </view>
+          <view>
+            <text class="auth-benefit-title">优惠券</text>
+            <text class="auth-benefit-desc">专属福利领取</text>
+          </view>
+        </view>
+        <view class="auth-benefit">
+          <view class="auth-benefit-icon">
+            <image src="/assets/icons/lucide/crown.svg" mode="aspectFit"></image>
+          </view>
+          <view>
+            <text class="auth-benefit-title">会员权益</text>
+            <text class="auth-benefit-desc">尊享特权服务</text>
+          </view>
+        </view>
+      </view>
+      <button class="wechat-login-btn" loading="{{loginLoading}}" bindtap="wechatLogin">
+        <image src="/assets/icons/wechat.svg" mode="aspectFit"></image>
+        <text>微信一键登录</text>
+      </button>
+      <button class="phone-login-btn" bindtap="phoneLoginTodo">
+        <image src="/assets/icons/lucide/smartphone.svg" mode="aspectFit"></image>
+        <text>手机号登录</text>
+      </button>
+      <button class="skip-login-btn" bindtap="closeLogin">暂不登录</button>
+      <view class="auth-agreement" bindtap="toggleLoginAgreement">
+        <view class="small-check {{loginAgreementChecked ? 'checked' : ''}}">✓</view>
+        <text>已阅读并同意</text>
+        <text class="link">《用户协议》</text>
+        <text class="link">《隐私政策》</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{showSpecModal}}" class="spec-mask" catchtap="closeSpec">
+    <view class="spec-sheet" catchtap="noop">
+      <view class="spec-head">
+        <image class="spec-image" src="{{selectedDish.imageUrl}}" mode="aspectFill"></image>
+        <view class="spec-title-wrap">
+          <text class="spec-name">{{selectedDish.name}}</text>
+          <text class="spec-desc">{{selectedDish.desc}}</text>
+          <text class="spec-price">{{selectedDish.priceText}} 起</text>
+        </view>
+        <button class="sheet-close" bindtap="closeSpec">×</button>
+      </view>
+
+      <view class="spec-section">
+        <text class="spec-label">规格</text>
+        <view class="chip-row">
+          <button
+            wx:for="{{specOptions}}"
+            wx:key="label"
+            class="chip {{selectedSpec === item.label ? 'active' : ''}}"
+            data-value="{{item.label}}"
+            bindtap="chooseSpec"
+          >{{item.text}}</button>
+        </view>
+      </view>
+
+      <view class="spec-section">
+        <text class="spec-label">辣度</text>
+        <view class="chip-row">
+          <button
+            wx:for="{{spiceOptions}}"
+            wx:key="*this"
+            class="chip {{selectedSpice === item ? 'active' : ''}}"
+            data-value="{{item}}"
+            bindtap="chooseSpice"
+          >{{item}}</button>
+        </view>
+      </view>
+
+      <view class="spec-section">
+        <text class="spec-label">餐具</text>
+        <view class="chip-row">
+          <button
+            wx:for="{{tablewareOptions}}"
+            wx:key="*this"
+            class="chip {{selectedTableware === item ? 'active' : ''}}"
+            data-value="{{item}}"
+            bindtap="chooseTableware"
+          >{{item}}</button>
+        </view>
+      </view>
+
+      <view class="spec-section">
+        <text class="spec-label">单品备注</text>
+        <textarea class="spec-remark" value="{{itemRemark}}" bindinput="onItemRemarkInput" placeholder="例如：不要葱、多酸笋、汤分开"></textarea>
+      </view>
+
+      <view class="spec-bottom">
+        <view class="qty">
+          <button class="qty-btn" data-delta="-1" bindtap="changeSpecQty">-</button>
+          <text class="qty-count">{{specQty}}</text>
+          <button class="qty-btn orange" data-delta="1" bindtap="changeSpecQty">+</button>
+        </view>
+        <button class="spec-confirm" bindtap="addConfiguredDish">加入购物车 · {{specTotalText}}</button>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{cartCount > 0 && tab !== 'cart'}}" class="cart-bar" bindtap="goCart">
+    <view class="cart-bar-left">
+      <view class="cart-bar-icon">
+        <text wx:if="{{cartCount > 0}}" class="cart-bar-badge">{{cartCount}}</text>
+      </view>
+      <view>
+        <text class="cart-total">{{cartTotalText}}</text>
+        <text class="cart-count">{{cartCount}} 件商品</text>
+      </view>
+    </view>
+    <button class="primary-btn" catchtap="goCart">去结算</button>
+  </view>
+
+  <view class="tabbar">
+    <button class="tab {{tab === 'home' ? 'active' : ''}}" data-tab="home" bindtap="switchTab">
+      <image class="tab-icon" src="{{tab === 'home' ? '/assets/icons/lucide/house-active.svg' : '/assets/icons/lucide/house.svg'}}" mode="aspectFit"></image>
+      <text>首页</text>
+    </button>
+    <button class="tab {{tab === 'menu' ? 'active' : ''}}" data-tab="menu" bindtap="switchTab">
+      <image class="tab-icon" src="{{tab === 'menu' ? '/assets/icons/lucide/menu-active.svg' : '/assets/icons/lucide/menu.svg'}}" mode="aspectFit"></image>
+      <text>菜单</text>
+    </button>
+    <button class="tab {{tab === 'orders' ? 'active' : ''}}" data-tab="orders" bindtap="switchTab">
+      <image class="tab-icon" src="{{tab === 'orders' ? '/assets/icons/lucide/order-active.svg' : '/assets/icons/lucide/order.svg'}}" mode="aspectFit"></image>
+      <text>订单</text>
+    </button>
+    <button class="tab {{tab === 'cart' ? 'active' : ''}}" data-tab="cart" bindtap="switchTab">
+      <view class="tab-icon-wrap">
+        <image class="tab-icon" src="{{tab === 'cart' ? '/assets/icons/lucide/cart-active.svg' : '/assets/icons/lucide/cart.svg'}}" mode="aspectFit"></image>
+        <text wx:if="{{cartCount > 0}}" class="cart-badge">{{cartCount}}</text>
+      </view>
+      <text>购物车</text>
+    </button>
+    <button class="tab {{tab === 'mine' ? 'active' : ''}}" data-tab="mine" bindtap="switchTab">
+      <image class="tab-icon" src="{{tab === 'mine' ? '/assets/icons/lucide/user-active.svg' : '/assets/icons/lucide/user.svg'}}" mode="aspectFit"></image>
+      <text>我的</text>
+    </button>
+  </view>
+</view>

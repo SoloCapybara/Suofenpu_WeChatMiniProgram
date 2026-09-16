@@ -13,8 +13,8 @@
   gap: 20rpx;
   background: rgba(255, 255, 255, 0.96);
   color: #181818;
-  border: 1rpx solid rgba(255, 132, 27, 0.18);
-  box-shadow: 0 20rpx 54rpx rgba(255, 112, 12, 0.18);
+  border: 1rpx solid rgba(255, 132, 27, 0.14);
+  box-shadow: 0 16rpx 40rpx rgba(28, 20, 12, 0.1);
 }
 
 .cart-bar-left {
@@ -61,13 +61,13 @@
   color: #fff;
   background: #ef3d32;
   font-size: 20rpx;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .cart-total {
   display: block;
   font-size: 32rpx;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .cart-count {

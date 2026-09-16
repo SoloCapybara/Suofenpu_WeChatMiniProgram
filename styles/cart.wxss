@@ -1,7 +1,7 @@
 .panel {
-  border-radius: 18rpx;
-  background: #fff;
-  box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.06);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
 }
 
 .empty {
@@ -17,7 +17,7 @@
 .empty-title {
   color: #202124;
   font-size: 36rpx;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .empty-sub {
@@ -52,7 +52,7 @@
 .cart-name,
 .order-title {
   font-size: 30rpx;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .cart-meta,
@@ -75,8 +75,8 @@
   box-sizing: border-box;
   overflow: hidden;
   background:
-    radial-gradient(circle at 90% 10%, rgba(255, 219, 164, 0.5), transparent 260rpx),
-    linear-gradient(180deg, #fffaf1 0%, #fffdf8 48%, #f8f8f8 100%);
+    radial-gradient(circle at 90% 8%, rgba(255, 186, 120, 0.22), transparent 260rpx),
+    linear-gradient(180deg, var(--color-bg-warm) 0%, var(--color-bg) 52%, #f3f2ef 100%);
 }
 
 .cart-hero {
@@ -97,7 +97,7 @@
   color: #141414;
   font-size: 56rpx;
   line-height: 1.05;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .cart-page-sub {
@@ -147,7 +147,7 @@
   color: #141414;
   font-size: 31rpx;
   line-height: 1.25;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .cart-product-card .cart-meta {
@@ -162,7 +162,7 @@
   margin-top: 18rpx;
   color: #4e4e4e;
   font-size: 28rpx;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .cart-product-card .cart-remark {
@@ -183,22 +183,14 @@
   min-height: 56rpx;
   max-height: 56rpx;
   flex-basis: 56rpx;
-  color: #1b1b1b;
-  background: #f2f2f2;
   font-size: 32rpx;
-  font-weight: 900;
-}
-
-.cart-qty .qty-btn.orange {
-  color: #fff;
-  background: linear-gradient(180deg, #ff971e, #ff5b05);
 }
 
 .cart-qty .qty-count {
   min-width: 34rpx;
   color: #111;
   font-size: 32rpx;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .cart-info-card {
@@ -238,7 +230,7 @@
   color: #181818;
   font-size: 30rpx;
   line-height: 1.2;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .cart-row-value {
@@ -372,7 +364,7 @@
   display: block;
   color: #1a1a1a;
   font-size: 30rpx;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .cart-remark-box {
@@ -439,10 +431,6 @@
 
 .cart-summary-card .pay-btn {
   min-height: 84rpx;
-  margin-top: 24rpx;
-  border-radius: 999rpx;
-  background: linear-gradient(90deg, #ff6a00, #ff5b05);
-  box-shadow: 0 16rpx 28rpx rgba(255, 96, 5, 0.18);
 }
 
 .checkout {
@@ -466,7 +454,7 @@
 .field-label {
   color: #707070;
   font-size: 24rpx;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .field-action {
@@ -479,7 +467,7 @@
   color: #ff760f;
   background: #fff2e6;
   font-size: 22rpx;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .field input,
@@ -520,7 +508,7 @@
   color: #555;
   background: #f7f7f7;
   font-size: 25rpx;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .chip.active {
@@ -560,7 +548,7 @@
 .coupon-select-title {
   display: block;
   font-size: 26rpx;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .coupon-select-rule {
@@ -573,7 +561,7 @@
 .coupon-select-price {
   flex: 0 0 auto;
   font-size: 30rpx;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .bill {
@@ -604,24 +592,7 @@
   align-items: center;
   justify-content: space-between;
   font-size: 30rpx;
-  font-weight: 900;
+  font-weight: 700;
 }
 
-.pay-btn,
-.primary-btn {
-  min-height: 88rpx;
-  border-radius: 999rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  background: linear-gradient(180deg, #ff9834, #ff6f0b);
-  font-size: 30rpx;
-  font-weight: 900;
-}
-
-.pay-btn {
-  width: 100%;
-  margin-top: 24rpx;
-}
 

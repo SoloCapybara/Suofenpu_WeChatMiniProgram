@@ -2,11 +2,17 @@ module.exports = {
   switchTab(event) {
     const tab = event.currentTarget.dataset.tab
     this.setData({ tab })
+    if (tab === 'home') {
+      this.loadHomeBanners()
+    }
     if (tab === 'orders') {
       this.loadMyOrders()
     }
     if (tab === 'menu') {
       this.loadDishes()
+    }
+    if (tab === 'mine') {
+      this.loadStoreStatus()
     }
   },
 
@@ -68,7 +74,7 @@ module.exports = {
       fail: () => {
         wx.showModal({
           title: '位置授权未开启',
-          content: '需要获取位置来判断配送范围和推荐附近门店，可在设置中重新授权。',
+          content: '需要获取位置来判断配送范围和填写收货地址，可在设置中重新授权。',
           confirmText: '去设置',
           success: (result) => {
             if (result.confirm) wx.openSetting()

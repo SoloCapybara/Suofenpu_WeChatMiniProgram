@@ -12,6 +12,8 @@ const authActions = require('./modules/auth-actions.js')
 const navigationActions = require('./modules/navigation-actions.js')
 const menuActions = require('./modules/menu-actions.js')
 const orderCartActions = require('./modules/order-cart-actions.js')
+const storeActions = require('./modules/store-actions.js')
+const homeActions = require('./modules/home-actions.js')
 
 const app = getApp()
 const initialViewState = buildViewState([], 'new5', baseDishes)
@@ -35,6 +37,9 @@ Page({
     menuSections: buildMenuSections(initialViewState.dishes, menuCategories),
     activeOrderTab: 'all',
     showSpecModal: false,
+    specSheetReady: false,
+    specSheetTranslateY: 720,
+    specSheetTransition: 'transform 0.34s cubic-bezier(0.22, 1, 0.36, 1)',
     showAgreementModal: false,
     agreementChecked: false,
     hasAgreedAgreement: false,
@@ -57,6 +62,8 @@ Page({
     invoiceType: invoiceOptions[0],
     orderRemark: '',
     orderRemarkLength: 0,
+    storeOpen: true,
+    storeOpenText: '营业中',
     ...defaultSpecState(),
     ...initialViewState,
   },
@@ -76,10 +83,17 @@ Page({
     })
 
     this.loadDishes()
+    this.loadStoreStatus()
+    this.loadHomeBanners()
     if (token) {
       this.refreshCurrentUser()
       this.loadMyOrders()
     }
+  },
+
+  onShow() {
+    this.loadStoreStatus()
+    this.loadHomeBanners()
   },
 
   ...agreementActions,
@@ -87,4 +101,6 @@ Page({
   ...navigationActions,
   ...menuActions,
   ...orderCartActions,
+  ...storeActions,
+  ...homeActions,
 })

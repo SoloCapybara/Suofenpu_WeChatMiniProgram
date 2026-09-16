@@ -65,4 +65,6 @@ function buildMenuSections(dishes, categories = menuCategories, keyword = '') {
 
 module.exports = {
   buildMenuSections,
+  normalizeCategories,
+  normalizeCategoryIcon,
 }

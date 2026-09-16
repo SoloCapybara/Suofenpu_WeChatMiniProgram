@@ -1,8 +1,35 @@
+/* Design tokens — warm noodle shop, restrained */
 page {
+  --color-bg: #f5f4f1;
+  --color-bg-warm: #faf7f2;
+  --color-surface: #ffffff;
+  --color-text: #1c1a17;
+  --color-muted: #8a8680;
+  --color-line: #eeebe6;
+  --color-primary: #ff6f0b;
+  --color-primary-deep: #f05a00;
+  --color-primary-soft: rgba(255, 111, 11, 0.14);
+  --color-price: #e8451a;
+  --color-danger: #ef3d32;
+  --shadow-soft: 0 10rpx 28rpx rgba(28, 20, 12, 0.06);
+  --shadow-card: 0 12rpx 32rpx rgba(28, 20, 12, 0.07);
+  --radius-card: 22rpx;
+  --radius-pill: 999rpx;
+  --font-display: 44rpx;
+  --font-title: 34rpx;
+  --font-body: 28rpx;
+  --font-caption: 24rpx;
+  --font-weight-title: 700;
+  --font-weight-body: 500;
+  --font-weight-strong: 600;
+
   height: 100vh;
-  background: #fff8ec;
-  color: #161616;
-  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  font-size: var(--font-body);
+  font-weight: var(--font-weight-body);
+  line-height: 1.4;
 }
 
 button {
@@ -20,13 +47,13 @@ button::after {
 .page {
   min-height: 100vh;
   background:
-    radial-gradient(circle at 20% 0%, rgba(255, 229, 180, 0.72), transparent 380rpx),
-    linear-gradient(180deg, #fff7e8 0%, #fffaf2 42%, #f7f7f7 100%);
+    radial-gradient(circle at 18% -4%, rgba(255, 186, 120, 0.28), transparent 340rpx),
+    linear-gradient(180deg, var(--color-bg-warm) 0%, var(--color-bg) 48%, #f3f2ef 100%);
 }
 
 .content {
   height: 100vh;
-  padding-bottom: 176rpx;
+  padding-bottom: calc(148rpx + env(safe-area-inset-bottom));
   box-sizing: border-box;
 }
 
@@ -41,3 +68,166 @@ button::after {
   box-sizing: border-box;
 }
 
+/* —— Unified buttons —— */
+.primary-btn,
+.pay-btn,
+.order-empty-btn {
+  min-height: 84rpx;
+  padding: 0 36rpx;
+  border-radius: var(--radius-pill);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: linear-gradient(180deg, #ff8a2b, var(--color-primary-deep));
+  box-shadow: 0 12rpx 28rpx rgba(255, 111, 11, 0.22);
+  font-size: 30rpx;
+  font-weight: 700;
+  line-height: 1;
+  transition: transform 0.14s ease, opacity 0.14s ease;
+}
+
+.primary-btn:active,
+.pay-btn:active,
+.order-empty-btn:active {
+  transform: scale(0.985);
+  opacity: 0.92;
+}
+
+.pay-btn {
+  width: 100%;
+  margin-top: 24rpx;
+}
+
+.ghost-btn,
+.order-action.ghost {
+  min-height: 56rpx;
+  padding: 0 22rpx;
+  border-radius: var(--radius-pill);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555;
+  background: #fff;
+  box-shadow: inset 0 0 0 2rpx #dadada;
+  font-size: 25rpx;
+  font-weight: 600;
+}
+
+.round-add,
+.qty-btn {
+  position: relative;
+  width: 52rpx;
+  min-width: 52rpx;
+  max-width: 52rpx;
+  height: 52rpx;
+  min-height: 52rpx;
+  max-height: 52rpx;
+  flex: 0 0 52rpx;
+  padding: 0;
+  box-sizing: border-box;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: linear-gradient(180deg, #ff9a3b, var(--color-primary));
+  box-shadow: 0 8rpx 18rpx rgba(255, 111, 11, 0.2);
+  font-size: 30rpx;
+  font-weight: 600;
+  line-height: 1;
+  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.18s ease, box-shadow 0.18s ease;
+}
+
+.qty-btn:active {
+  transform: scale(0.94);
+  opacity: 0.9;
+}
+
+.round-add {
+  overflow: visible;
+  border-radius: 16rpx;
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.28), transparent 42%),
+    linear-gradient(145deg, #ffb056 0%, #ff7a1a 48%, #f05a00 100%);
+  box-shadow:
+    0 8rpx 20rpx rgba(255, 106, 10, 0.28),
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.42);
+  font-size: 0;
+  transition:
+    transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.2s ease,
+    filter 0.2s ease,
+    background 0.2s ease;
+}
+
+.round-add::after {
+  content: "";
+  position: absolute;
+  inset: -8rpx;
+  border-radius: 22rpx;
+  border: 3rpx solid rgba(255, 122, 26, 0.28);
+  opacity: 0;
+  transform: scale(0.72);
+  transition: opacity 0.22s ease, transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.round-add-hover {
+  transform: scale(0.9);
+  filter: saturate(1.08) brightness(0.96);
+  box-shadow:
+    0 2rpx 10rpx rgba(255, 106, 10, 0.2),
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.28);
+}
+
+.round-add-hover::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.plus-icon {
+  position: relative;
+  width: 22rpx;
+  height: 22rpx;
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.round-add-hover .plus-icon {
+  transform: rotate(90deg) scale(0.92);
+}
+
+.plus-icon::before,
+.plus-icon::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 999rpx;
+  background: #fff;
+  box-shadow: 0 1rpx 2rpx rgba(120, 40, 0, 0.12);
+  transform: translate(-50%, -50%);
+}
+
+.plus-icon::before {
+  width: 22rpx;
+  height: 3.5rpx;
+}
+
+.plus-icon::after {
+  width: 3.5rpx;
+  height: 22rpx;
+}
+
+.qty-btn.muted,
+.cart-qty .qty-btn:not(.orange) {
+  color: #1b1b1b;
+  background: #f1efeb;
+  box-shadow: none;
+}
+
+.qty-btn.orange,
+.cart-qty .qty-btn.orange {
+  color: #fff;
+  background: linear-gradient(180deg, #ff971e, #ff5b05);
+}

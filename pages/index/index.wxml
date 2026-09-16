@@ -44,11 +44,15 @@
                 <text class="product-desc">{{item.shortDesc}}</text>
                 <view class="product-foot">
                   <text class="product-price">{{item.priceText}}</text>
-                  <button class="round-add" data-id="{{item.id}}" bindtap="openSpec">
-                    <view class="plus-icon">
-                      <view class="plus-line horizontal"></view>
-                      <view class="plus-line vertical"></view>
-                    </view>
+                  <button
+                    class="round-add"
+                    hover-class="round-add-hover"
+                    hover-start-time="0"
+                    hover-stay-time="100"
+                    data-id="{{item.id}}"
+                    bindtap="openSpec"
+                  >
+                    <view class="plus-icon"></view>
                   </button>
                 </view>
               </view>
@@ -59,7 +63,7 @@
 
     </view>
 
-    <view wx:elif="{{tab === 'menu'}}" class="screen menu-page">
+    <view wx:elif="{{tab === 'menu'}}" class="screen menu-page {{cartCount > 0 ? 'with-cart-bar' : ''}}">
       <view class="menu-search">
         <image src="/assets/icons/lucide/search.svg" mode="aspectFit"></image>
         <input
@@ -94,8 +98,7 @@
                 </view>
                 <text class="menu-more">更多 ›</text>
               </view>
-              <scroll-view class="menu-product-scroll" scroll-x enhanced show-scrollbar="{{false}}">
-                <view class="menu-product-track">
+              <view class="menu-product-list">
                   <view class="menu-product-card" wx:for="{{item.items}}" wx:for-item="dish" wx:key="id">
                     <view class="menu-product-image-wrap">
                       <image class="menu-product-image" src="{{dish.imageUrl}}" mode="aspectFill"></image>
@@ -109,18 +112,21 @@
                         <view class="menu-product-actions">
                           <button wx:if="{{dish.qty > 0}}" class="qty-btn" data-id="{{dish.id}}" bindtap="reduceDish">-</button>
                           <text wx:if="{{dish.qty > 0}}" class="qty-count">{{dish.qty}}</text>
-                          <button class="round-add" data-id="{{dish.id}}" bindtap="openSpec">
-                            <view class="plus-icon">
-                              <view class="plus-line horizontal"></view>
-                              <view class="plus-line vertical"></view>
-                            </view>
+                          <button
+                            class="round-add"
+                            hover-class="round-add-hover"
+                            hover-start-time="0"
+                            hover-stay-time="100"
+                            data-id="{{dish.id}}"
+                            bindtap="openSpec"
+                          >
+                            <view class="plus-icon"></view>
                           </button>
                         </view>
                       </view>
                     </view>
                   </view>
                 </view>
-              </scroll-view>
             </view>
           </block>
           <view wx:if="{{menuHasNoResult}}" class="menu-search-empty">
@@ -433,14 +439,14 @@
             <text>联系客服</text>
           </view>
           <view class="mine-row-right">
-            <text>营业中</text>
+            <text class="mine-store-status {{ storeOpen ? 'open' : 'closed' }}">{{ storeOpenText }}</text>
             <text class="mine-arrow">›</text>
           </view>
         </view>
         <view class="mine-list-row hover-touch">
           <view class="mine-row-left">
             <image class="mine-row-icon" src="/assets/icons/lucide/store.svg" mode="aspectFit"></image>
-            <text>门店信息</text>
+            <text>店铺信息</text>
           </view>
           <view class="mine-row-right">
             <text>2.1km</text>
@@ -485,7 +491,7 @@
         <text>我们非常重视您的个人信息保护。仅在下单支付、配送收货、会员权益等必要场景收集完成服务所需的信息。</text>
       </view>
       <view class="agreement-copy">
-        <text>我们不会默认开启设备权限。只有在您使用定位选择附近门店、填写配送地址等功能时，才会单独向您申请授权。</text>
+        <text>我们不会默认开启设备权限。只有在您使用定位填写配送地址等功能时，才会单独向您申请授权。</text>
       </view>
       <view class="agreement-copy">
         <text>您点击同意，仅表示已了解我们提供的基本功能及所需信息，不代表同意收集非必要信息。</text>
@@ -565,64 +571,101 @@
     </view>
   </view>
 
-  <view wx:if="{{showSpecModal}}" class="spec-mask" catchtap="closeSpec">
-    <view class="spec-sheet" catchtap="noop">
-      <view class="spec-head">
+  <view wx:if="{{showSpecModal}}" class="spec-mask {{specSheetReady ? 'open' : ''}}" catchtap="closeSpec" catchtouchmove="noop">
+    <view
+      class="spec-sheet"
+      catchtap="noop"
+      style="transform: translate3d(0, {{specSheetTranslateY}}px, 0); transition: {{specSheetTransition}};"
+    >
+      <view
+        class="spec-drag"
+        catchtouchstart="onSpecSheetTouchStart"
+        catchtouchmove="onSpecSheetTouchMove"
+        catchtouchend="onSpecSheetTouchEnd"
+        catchtouchcancel="onSpecSheetTouchEnd"
+      >
+        <view class="spec-drag-bar"></view>
+      </view>
+      <button
+        class="sheet-close"
+        hover-class="sheet-close-hover"
+        hover-start-time="0"
+        hover-stay-time="120"
+        catchtap="closeSpec"
+      >
+        <image src="/assets/icons/lucide/x.svg" mode="aspectFit"></image>
+      </button>
+
+      <view
+        class="spec-head"
+        catchtouchstart="onSpecSheetTouchStart"
+        catchtouchmove="onSpecSheetTouchMove"
+        catchtouchend="onSpecSheetTouchEnd"
+        catchtouchcancel="onSpecSheetTouchEnd"
+      >
         <image class="spec-image" src="{{selectedDish.imageUrl}}" mode="aspectFill"></image>
         <view class="spec-title-wrap">
           <text class="spec-name">{{selectedDish.name}}</text>
-          <text class="spec-desc">{{selectedDish.desc}}</text>
-          <text class="spec-price">{{selectedDish.priceText}} 起</text>
-        </view>
-        <button class="sheet-close" bindtap="closeSpec">×</button>
-      </view>
-
-      <view class="spec-section">
-        <text class="spec-label">规格</text>
-        <view class="chip-row">
-          <button
-            wx:for="{{specOptions}}"
-            wx:key="label"
-            class="chip {{selectedSpec === item.label ? 'active' : ''}}"
-            data-value="{{item.label}}"
-            bindtap="chooseSpec"
-          >{{item.text}}</button>
+          <text class="spec-desc">{{selectedDish.desc || selectedDish.shortDesc}}</text>
+          <text class="spec-price">{{selectedDish.priceText}}<text class="spec-price-unit"> 起</text></text>
         </view>
       </view>
 
-      <view class="spec-section">
-        <text class="spec-label">辣度</text>
-        <view class="chip-row">
-          <button
-            wx:for="{{spiceOptions}}"
-            wx:key="*this"
-            class="chip {{selectedSpice === item ? 'active' : ''}}"
-            data-value="{{item}}"
-            bindtap="chooseSpice"
-          >{{item}}</button>
+      <scroll-view class="spec-body" scroll-y enhanced show-scrollbar="{{false}}">
+        <view class="spec-section">
+          <text class="spec-label">规格</text>
+          <view class="chip-row">
+            <button
+              wx:for="{{specOptions}}"
+              wx:key="label"
+              class="chip {{selectedSpec === item.label ? 'active' : ''}}"
+              data-value="{{item.label}}"
+              bindtap="chooseSpec"
+            >{{item.text}}</button>
+          </view>
         </view>
-      </view>
 
-      <view class="spec-section">
-        <text class="spec-label">餐具</text>
-        <view class="chip-row">
-          <button
-            wx:for="{{tablewareOptions}}"
-            wx:key="*this"
-            class="chip {{selectedTableware === item ? 'active' : ''}}"
-            data-value="{{item}}"
-            bindtap="chooseTableware"
-          >{{item}}</button>
+        <view class="spec-section">
+          <text class="spec-label">辣度</text>
+          <view class="chip-row">
+            <button
+              wx:for="{{spiceOptions}}"
+              wx:key="*this"
+              class="chip {{selectedSpice === item ? 'active' : ''}}"
+              data-value="{{item}}"
+              bindtap="chooseSpice"
+            >{{item}}</button>
+          </view>
         </view>
-      </view>
 
-      <view class="spec-section">
-        <text class="spec-label">单品备注</text>
-        <textarea class="spec-remark" value="{{itemRemark}}" bindinput="onItemRemarkInput" placeholder="例如：不要葱、多酸笋、汤分开"></textarea>
-      </view>
+        <view class="spec-section">
+          <text class="spec-label">餐具</text>
+          <view class="chip-row">
+            <button
+              wx:for="{{tablewareOptions}}"
+              wx:key="*this"
+              class="chip {{selectedTableware === item ? 'active' : ''}}"
+              data-value="{{item}}"
+              bindtap="chooseTableware"
+            >{{item}}</button>
+          </view>
+        </view>
+
+        <view class="spec-section">
+          <text class="spec-label">单品备注</text>
+          <textarea
+            class="spec-remark"
+            value="{{itemRemark}}"
+            bindinput="onItemRemarkInput"
+            maxlength="60"
+            placeholder="例如：不要葱、多酸笋、汤分开"
+            placeholder-class="spec-remark-placeholder"
+          ></textarea>
+        </view>
+      </scroll-view>
 
       <view class="spec-bottom">
-        <view class="qty">
+        <view class="qty spec-qty">
           <button class="qty-btn" data-delta="-1" bindtap="changeSpecQty">-</button>
           <text class="qty-count">{{specQty}}</text>
           <button class="qty-btn orange" data-delta="1" bindtap="changeSpecQty">+</button>
@@ -645,28 +688,44 @@
     <button class="primary-btn" catchtap="goCart">去结算</button>
   </view>
 
-  <view class="tabbar">
+  <view class="tabbar" data-active="{{tab}}">
+    <view class="tab-indicator" aria-hidden="true"></view>
     <button class="tab {{tab === 'home' ? 'active' : ''}}" data-tab="home" bindtap="switchTab">
-      <image class="tab-icon" src="{{tab === 'home' ? '/assets/icons/lucide/house-active.svg' : '/assets/icons/lucide/house.svg'}}" mode="aspectFit"></image>
+      <view class="tab-icon-stack">
+        <image class="tab-icon tab-icon-idle" src="/assets/icons/lucide/house.svg" mode="aspectFit"></image>
+        <image class="tab-icon tab-icon-active" src="/assets/icons/lucide/house-active.svg" mode="aspectFit"></image>
+      </view>
       <text>首页</text>
     </button>
     <button class="tab {{tab === 'menu' ? 'active' : ''}}" data-tab="menu" bindtap="switchTab">
-      <image class="tab-icon" src="{{tab === 'menu' ? '/assets/icons/lucide/menu-active.svg' : '/assets/icons/lucide/menu.svg'}}" mode="aspectFit"></image>
+      <view class="tab-icon-stack">
+        <image class="tab-icon tab-icon-idle" src="/assets/icons/lucide/menu.svg" mode="aspectFit"></image>
+        <image class="tab-icon tab-icon-active" src="/assets/icons/lucide/menu-active.svg" mode="aspectFit"></image>
+      </view>
       <text>菜单</text>
     </button>
     <button class="tab {{tab === 'orders' ? 'active' : ''}}" data-tab="orders" bindtap="switchTab">
-      <image class="tab-icon" src="{{tab === 'orders' ? '/assets/icons/lucide/order-active.svg' : '/assets/icons/lucide/order.svg'}}" mode="aspectFit"></image>
+      <view class="tab-icon-stack">
+        <image class="tab-icon tab-icon-idle" src="/assets/icons/lucide/order.svg" mode="aspectFit"></image>
+        <image class="tab-icon tab-icon-active" src="/assets/icons/lucide/order-active.svg" mode="aspectFit"></image>
+      </view>
       <text>订单</text>
     </button>
     <button class="tab {{tab === 'cart' ? 'active' : ''}}" data-tab="cart" bindtap="switchTab">
       <view class="tab-icon-wrap">
-        <image class="tab-icon" src="{{tab === 'cart' ? '/assets/icons/lucide/cart-active.svg' : '/assets/icons/lucide/cart.svg'}}" mode="aspectFit"></image>
+        <view class="tab-icon-stack">
+          <image class="tab-icon tab-icon-idle" src="/assets/icons/lucide/cart.svg" mode="aspectFit"></image>
+          <image class="tab-icon tab-icon-active" src="/assets/icons/lucide/cart-active.svg" mode="aspectFit"></image>
+        </view>
         <text wx:if="{{cartCount > 0}}" class="cart-badge">{{cartCount}}</text>
       </view>
       <text>购物车</text>
     </button>
     <button class="tab {{tab === 'mine' ? 'active' : ''}}" data-tab="mine" bindtap="switchTab">
-      <image class="tab-icon" src="{{tab === 'mine' ? '/assets/icons/lucide/user-active.svg' : '/assets/icons/lucide/user.svg'}}" mode="aspectFit"></image>
+      <view class="tab-icon-stack">
+        <image class="tab-icon tab-icon-idle" src="/assets/icons/lucide/user.svg" mode="aspectFit"></image>
+        <image class="tab-icon tab-icon-active" src="/assets/icons/lucide/user-active.svg" mode="aspectFit"></image>
+      </view>
       <text>我的</text>
     </button>
   </view>

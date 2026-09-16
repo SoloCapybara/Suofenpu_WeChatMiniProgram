@@ -11,7 +11,7 @@
   },
   "permission": {
     "scope.userLocation": {
-      "desc": "用于判断配送范围、推荐附近门店和填写收货地址"
+      "desc": "用于判断配送范围和填写收货地址"
     }
   },
   "requiredPrivateInfos": [

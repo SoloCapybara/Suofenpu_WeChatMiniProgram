@@ -4,9 +4,9 @@
   box-sizing: border-box;
   overflow: hidden;
   background:
-    radial-gradient(circle at 92% 12%, rgba(255, 213, 151, 0.36), transparent 210rpx),
-    radial-gradient(circle at 0% 32%, rgba(255, 235, 197, 0.7), transparent 230rpx),
-    linear-gradient(180deg, #ffffff 0%, #fffaf2 42%, #fffdf8 100%);
+    radial-gradient(circle at 92% 10%, rgba(255, 186, 120, 0.22), transparent 210rpx),
+    radial-gradient(circle at 0% 28%, rgba(255, 220, 180, 0.28), transparent 230rpx),
+    linear-gradient(180deg, #ffffff 0%, var(--color-bg-warm) 42%, var(--color-bg) 100%);
 }
 
 .mine-page::before,
@@ -15,7 +15,7 @@
   position: absolute;
   z-index: 0;
   border-radius: 999rpx;
-  background: rgba(255, 218, 165, 0.34);
+  background: rgba(255, 186, 120, 0.16);
 }
 
 .mine-page::before {
@@ -40,10 +40,10 @@
 .mine-login-card {
   position: relative;
   z-index: 1;
-  border: 2rpx solid rgba(255, 157, 51, 0.16);
-  border-radius: 28rpx;
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: 0 18rpx 46rpx rgba(105, 69, 31, 0.07);
+  border: 1rpx solid rgba(255, 157, 51, 0.14);
+  border-radius: 26rpx;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: var(--shadow-soft);
 }
 
 .mine-guest-hero {
@@ -94,7 +94,7 @@
   color: #202124;
   font-size: 58rpx;
   line-height: 1;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .mine-guest-sub {
@@ -114,7 +114,7 @@
   color: #1d1d1d;
   font-size: 36rpx;
   line-height: 1.2;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .mine-benefit-grid {
@@ -152,7 +152,7 @@
   color: #191919;
   font-size: 27rpx;
   line-height: 1.2;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .mine-benefit-desc {
@@ -189,7 +189,7 @@
   color: #6f3513;
   font-size: 36rpx;
   line-height: 1.25;
-  font-weight: 900;
+  font-weight: 700;
   text-shadow: 0 2rpx 10rpx rgba(255, 255, 255, 0.45);
 }
 
@@ -211,23 +211,23 @@
   color: #202124;
   font-size: 32rpx;
   line-height: 1.25;
-  font-weight: 800;
+  font-weight: 600;
   text-align: center;
 }
 
 .mine-phone-btn,
 .mine-wechat-btn {
   width: 100%;
-  min-height: 88rpx;
+  min-height: 84rpx;
   padding: 0;
-  border-radius: 999rpx;
+  border-radius: var(--radius-pill);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 18rpx;
-  font-size: 32rpx;
+  font-size: 30rpx;
   line-height: 1;
-  font-weight: 900;
+  font-weight: 700;
   transition: transform 0.14s ease, opacity 0.14s ease;
 }
 
@@ -287,7 +287,7 @@
 
 .mine-login-agreement .link {
   color: #ff6811;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .mine-profile-card {
@@ -331,7 +331,7 @@
   color: #191919;
   font-size: 34rpx;
   line-height: 1.15;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .mine-user-phone {
@@ -401,7 +401,7 @@
 .point-icon {
   border-radius: 18rpx;
   font-size: 27rpx;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .order-icon {
@@ -432,7 +432,7 @@
   color: #ff6811;
   font-size: 54rpx;
   line-height: 1;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .mine-stat-label {
@@ -484,7 +484,7 @@
   gap: 22rpx;
   color: #202020;
   font-size: 31rpx;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .mine-row-right {
@@ -492,6 +492,14 @@
   color: #7a7a7a;
   font-size: 30rpx;
   font-weight: 700;
+}
+
+.mine-store-status.open {
+  color: #2f9e44;
+}
+
+.mine-store-status.closed {
+  color: #c92a2a;
 }
 
 .mine-arrow {

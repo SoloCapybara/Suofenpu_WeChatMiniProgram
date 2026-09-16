@@ -1,8 +1,8 @@
 .hero-swiper {
   height: 300rpx;
   overflow: hidden;
-  border-radius: 22rpx;
-  box-shadow: 0 16rpx 34rpx rgba(164, 109, 38, 0.12);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
 }
 
 .hero-swiper swiper-item {
@@ -46,7 +46,7 @@
   color: #2a0900;
   font-size: 58rpx;
   line-height: 1.05;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .hero-title.red {
@@ -57,21 +57,21 @@
   width: 360rpx;
   margin-top: 10rpx;
   padding: 10rpx 24rpx;
-  border: 2rpx solid #ef8b51;
-  border-radius: 999rpx;
+  border: 2rpx solid rgba(239, 139, 81, 0.5);
+  border-radius: var(--radius-pill);
   color: #d94b17;
-  background: rgba(255, 247, 232, 0.76);
+  background: rgba(255, 255, 255, 0.72);
   font-size: 24rpx;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .service-card,
 .notice-card,
 .recommend-card {
   margin-top: 22rpx;
-  border-radius: 22rpx;
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow: 0 14rpx 40rpx rgba(114, 83, 38, 0.09);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
 }
 
 .service-card {
@@ -99,7 +99,7 @@
   color: #fff;
   background: linear-gradient(180deg, #ff9b45, #ff6e0b);
   font-size: 26rpx;
-  font-weight: 900;
+  font-weight: 700;
   box-shadow: 0 8rpx 18rpx rgba(255, 110, 11, 0.22);
 }
 
@@ -107,7 +107,7 @@
   color: #151515;
   font-size: 27rpx;
   line-height: 1.15;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .service-sub {
@@ -134,20 +134,20 @@
   color: #fff;
   background: linear-gradient(180deg, #ffb35a, #ff760f);
   font-size: 20rpx;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .notice-text {
   flex: 1;
   color: #3b332b;
-  font-size: 27rpx;
-  font-weight: 700;
+  font-size: 26rpx;
+  font-weight: 500;
 }
 
 .notice-arrow,
 .module-more {
-  color: #9a9a9a;
-  font-size: 32rpx;
+  color: var(--color-muted);
+  font-size: 28rpx;
 }
 
 .recommend-card {
@@ -162,8 +162,8 @@
 }
 
 .module-title {
-  font-size: 34rpx;
-  font-weight: 900;
+  font-size: var(--font-title);
+  font-weight: var(--font-weight-title);
 }
 
 .module-more {
@@ -184,11 +184,11 @@
   flex: 0 0 184rpx;
   width: 184rpx;
   overflow: hidden;
-  border-radius: 14rpx;
+  border-radius: 16rpx;
   display: inline-flex;
   flex-direction: column;
-  background: #fff;
-  box-shadow: 0 8rpx 26rpx rgba(0, 0, 0, 0.08);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
 }
 
 .product-image {
@@ -206,7 +206,7 @@
   color: #111;
   font-size: 25rpx;
   line-height: 1.15;
-  font-weight: 900;
+  font-weight: 700;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -231,62 +231,10 @@
 
 .product-price,
 .price {
-  color: #f24a21;
+  color: var(--color-price);
   font-size: 34rpx;
   line-height: 1;
-  font-weight: 900;
-}
-
-.round-add,
-.qty-btn {
-  position: relative;
-  width: 52rpx;
-  min-width: 52rpx;
-  max-width: 52rpx;
-  height: 52rpx;
-  min-height: 52rpx;
-  max-height: 52rpx;
-  flex: 0 0 52rpx;
-  padding: 0;
-  box-sizing: border-box;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  background: linear-gradient(180deg, #ffa53b, #ff7815);
-  font-size: 30rpx;
-  font-weight: 600;
-  line-height: 1;
-}
-
-.round-add {
-  font-size: 0;
-}
-
-.plus-icon {
-  position: relative;
-  width: 22rpx;
-  height: 22rpx;
-}
-
-.plus-line {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  border-radius: 999rpx;
-  background: #fff;
-  transform: translate(-50%, -50%);
-}
-
-.plus-line.horizontal {
-  width: 22rpx;
-  height: 4rpx;
-}
-
-.plus-line.vertical {
-  width: 4rpx;
-  height: 22rpx;
+  font-weight: 700;
 }
 
 .product-foot .round-add {
@@ -297,21 +245,24 @@
   min-height: 48rpx;
   max-height: 48rpx;
   flex-basis: 48rpx;
+  border-radius: 14rpx;
+}
+
+.product-foot .round-add::after {
+  border-radius: 18rpx;
 }
 
 .product-foot .plus-icon {
-  width: 20rpx;
-  height: 20rpx;
+  width: 18rpx;
+  height: 18rpx;
 }
 
-.product-foot .plus-line.horizontal {
-  width: 20rpx;
-  height: 4rpx;
+.product-foot .plus-icon::before {
+  width: 18rpx;
 }
 
-.product-foot .plus-line.vertical {
-  width: 4rpx;
-  height: 20rpx;
+.product-foot .plus-icon::after {
+  height: 18rpx;
 }
 
 .member-card {
@@ -336,7 +287,7 @@
   display: block;
   font-size: 40rpx;
   line-height: 1.1;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .member-sub {
@@ -349,14 +300,14 @@
 .member-btn {
   min-width: 168rpx;
   height: 64rpx;
-  border-radius: 999rpx;
+  border-radius: var(--radius-pill);
   display: flex;
   align-items: center;
   justify-content: center;
   color: #2b1a08;
   background: linear-gradient(180deg, #ffe1a6, #e9b159);
   font-size: 26rpx;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .member-rights {

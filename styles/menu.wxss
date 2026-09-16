@@ -1,17 +1,26 @@
 .menu-page {
-  padding: 26rpx 20rpx 190rpx;
+  height: 100%;
+  min-height: 0;
+  padding: 26rpx 20rpx 28rpx;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-page.with-cart-bar {
+  padding-bottom: calc(132rpx + 28rpx);
 }
 
 .menu-search {
-  height: 92rpx;
-  padding: 0 34rpx;
-  border-radius: 999rpx;
+  height: 88rpx;
+  flex: 0 0 auto;
+  padding: 0 32rpx;
+  border-radius: var(--radius-pill);
   display: flex;
   align-items: center;
-  gap: 20rpx;
-  background: #fff;
-  box-shadow: 0 16rpx 38rpx rgba(198, 128, 38, 0.18);
+  gap: 18rpx;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
 }
 
 .menu-search image {
@@ -34,9 +43,10 @@
 
 .menu-shell {
   margin-top: 28rpx;
-  height: calc(100vh - 300rpx);
-  max-height: calc(100vh - 300rpx);
+  flex: 1 1 auto;
   min-height: 0;
+  height: auto;
+  max-height: none;
   display: grid;
   grid-template-columns: 144rpx minmax(0, 1fr);
   gap: 16rpx;
@@ -45,11 +55,20 @@
 
 .menu-category-list {
   height: 100%;
-  border-radius: 26rpx;
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow: 0 18rpx 42rpx rgba(156, 107, 42, 0.14);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
   overflow: hidden;
   align-self: stretch;
+  padding-bottom: 12rpx;
+}
+
+.menu-section-list {
+  height: 100%;
+  min-width: 0;
+  overflow: hidden;
+  padding-bottom: 12rpx;
+  box-sizing: border-box;
 }
 
 .menu-category {
@@ -62,8 +81,8 @@
   gap: 10rpx;
   color: #202020;
   font-size: 24rpx;
-  font-weight: 800;
-  transition: background 0.16s ease, color 0.16s ease;
+  font-weight: 600;
+  transition: background 0.18s ease, color 0.18s ease;
 }
 
 .menu-category::before {
@@ -89,30 +108,24 @@
 }
 
 .menu-category.active {
-  color: #ff6412;
-  background: linear-gradient(90deg, #fff3e8, rgba(255, 246, 235, 0.4));
+  color: var(--color-primary);
+  background: linear-gradient(90deg, rgba(255, 243, 232, 0.95), rgba(255, 246, 235, 0.35));
 }
 
 .menu-category.active::before {
-  background: #ff6412;
+  background: var(--color-primary);
 }
 
 .menu-category.active image {
   filter: brightness(0) saturate(100%) invert(51%) sepia(91%) saturate(2834%) hue-rotate(354deg) brightness(100%) contrast(103%);
 }
 
-.menu-section-list {
-  height: 100%;
-  min-width: 0;
-  overflow: hidden;
-}
-
 .menu-section {
   margin-bottom: 24rpx;
   padding: 22rpx 20rpx 26rpx;
-  border-radius: 24rpx;
-  background: rgba(255, 255, 255, 0.94);
-  box-shadow: 0 12rpx 32rpx rgba(156, 107, 42, 0.08);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
 }
 
 .menu-section-head {
@@ -130,7 +143,7 @@
   gap: 12rpx;
   color: #191919;
   font-size: 31rpx;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .menu-section-title image {
@@ -144,44 +157,49 @@
   font-size: 24rpx;
 }
 
-.menu-product-scroll {
-  width: 100%;
-}
-
-.menu-product-track {
+.menu-product-list {
   display: flex;
-  gap: 24rpx;
-  padding: 2rpx 8rpx 8rpx 4rpx;
+  flex-direction: column;
+  gap: 8rpx;
 }
 
 .menu-product-card {
-  width: 330rpx;
-  flex: 0 0 330rpx;
-  border-radius: 22rpx;
-  overflow: hidden;
-  background: #fff;
-  box-shadow: 0 10rpx 28rpx rgba(120, 78, 32, 0.12);
+  display: grid;
+  grid-template-columns: 168rpx minmax(0, 1fr);
+  gap: 18rpx;
+  padding: 12rpx 4rpx;
+  border-radius: 16rpx;
+  background: transparent;
+  box-shadow: none;
+}
+
+.menu-product-card + .menu-product-card {
+  border-top: 1rpx solid var(--color-line, #eeebe6);
+  padding-top: 20rpx;
+  margin-top: 4rpx;
 }
 
 .menu-product-image-wrap {
   position: relative;
-  width: 330rpx;
-  height: 230rpx;
+  width: 168rpx;
+  height: 168rpx;
   overflow: hidden;
+  border-radius: 16rpx;
   background: #f6eadc;
+  flex: 0 0 168rpx;
 }
 
 .menu-product-image {
-  width: 330rpx;
-  height: 230rpx;
+  width: 168rpx;
+  height: 168rpx;
 }
 
 .menu-product-badge {
   position: absolute;
   left: 0;
   top: 0;
-  min-width: 66rpx;
-  height: 40rpx;
+  min-width: 60rpx;
+  height: 36rpx;
   padding: 0 10rpx;
   border-radius: 0 0 12rpx 0;
   display: flex;
@@ -189,12 +207,15 @@
   justify-content: center;
   color: #fff;
   background: linear-gradient(180deg, #ff4d4d, #ff7524);
-  font-size: 22rpx;
-  font-weight: 800;
+  font-size: 20rpx;
+  font-weight: 600;
 }
 
 .menu-product-body {
-  padding: 18rpx 20rpx 20rpx;
+  min-width: 0;
+  padding: 4rpx 0 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .menu-product-name {
@@ -204,22 +225,26 @@
   text-overflow: ellipsis;
   color: #181818;
   font-size: 30rpx;
-  line-height: 1.2;
-  font-weight: 900;
+  line-height: 1.25;
+  font-weight: 700;
 }
 
 .menu-product-desc {
-  display: block;
-  height: 62rpx;
-  margin-top: 12rpx;
+  display: -webkit-box;
+  margin-top: 8rpx;
   overflow: hidden;
-  color: #777;
+  color: #888;
   font-size: 24rpx;
-  line-height: 1.3;
+  line-height: 1.35;
+  height: auto;
+  max-height: 64rpx;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .menu-product-foot {
-  margin-top: 18rpx;
+  margin-top: auto;
+  padding-top: 12rpx;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -228,9 +253,9 @@
 
 .menu-product-price {
   min-width: 0;
-  color: #ff5d0b;
+  color: var(--color-price, #ff5d0b);
   font-size: 32rpx;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .menu-product-actions {
@@ -248,25 +273,24 @@
 }
 
 .menu-product-actions .round-add {
-  width: 54rpx;
-  min-width: 54rpx;
-  height: 54rpx;
-  min-height: 54rpx;
+  width: 52rpx;
+  min-width: 52rpx;
+  height: 52rpx;
+  min-height: 52rpx;
+  border-radius: 16rpx;
 }
 
 .menu-product-actions .plus-icon {
-  width: 22rpx;
-  height: 22rpx;
+  width: 20rpx;
+  height: 20rpx;
 }
 
-.menu-product-actions .plus-line.horizontal {
-  width: 22rpx;
-  height: 4rpx;
+.menu-product-actions .plus-icon::before {
+  width: 20rpx;
 }
 
-.menu-product-actions .plus-line.vertical {
-  width: 4rpx;
-  height: 22rpx;
+.menu-product-actions .plus-icon::after {
+  height: 20rpx;
 }
 
 .menu-product-actions .qty-count {
